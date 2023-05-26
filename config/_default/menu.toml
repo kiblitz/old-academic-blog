@@ -8,17 +8,28 @@
 #newtab = true
 
 [[social]]
+identifier = "linkedin"
+name = "LinkedIn"
+weight = -30
+url = "https://linkedin.com/in/gabrielelee"
+
+[social.params]
+icon = "brand-linkedin"
+
+[[social]]
 identifier = "github"
 name = "GitHub"
-url = "https://github.com/CaiJimmy/hugo-theme-stack"
+weight = -20
+url = "https://github.com/kiblitz"
 
 [social.params]
 icon = "brand-github"
 
 [[social]]
-identifier = "twitter"
-name = "Twitter"
-url = "https://twitter.com"
+identifier = "gmail"
+name = "Gmail"
+weight = -10
+url = "mailto:g.lee13770334@gmail.com"
 
 [social.params]
-icon = "brand-twitter"
+icon = "brand-gmail"
