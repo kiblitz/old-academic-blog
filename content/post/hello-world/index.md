@@ -22,4 +22,37 @@ $$
  \varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } } 
 $$
 
+{{< closable_alert style="danger" >}}
+**Ruh Roh!**
+<br />
+Things are not good at all.
+{{< /closable_alert >}}
+
+{{< box tip >}}
+  Tip
+{{< /box >}}
+
+{{< box warning >}}
+  Warning
+{{< /box >}}
+
+{{< box important >}}
+  Important
+{{< /box >}}
+
+{{< raw_html >}}
+<p id="demo"></p>
+<script>
+        document.getElementById("demo").innerHTML = Math.random();
+</script>
+{{< /raw_html >}}
+
+{{< gallery assets="img/hello-world/**" >}}
+
+## One
+### Two
+#### Three
+
+{{< audio "audio/wedding_song.m4a" >}}
+
 > Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
