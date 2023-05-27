@@ -53,6 +53,25 @@ Things are not good at all.
 ### Two
 #### Three
 
+{{< raw_html >}}
+<style>
+.parallax {
+  /* The image used */
+  background-image: url("cover.jpg");
+
+  /* Set a specific height */
+  min-height: 325px; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+<div class="parallax"></div>
+{{< /raw_html >}}
+
 {{< audio "audio/wedding_song.m4a" >}}
 
 > Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
