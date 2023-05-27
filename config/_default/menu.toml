@@ -33,3 +33,12 @@ url = "mailto:g.lee13770334@gmail.com"
 
 [social.params]
 icon = "brand-gmail"
+
+[[social]]
+identifier = "lichess"
+name = "Lichess"
+weight = 0
+url = "https://lichess.org/@/ozzieshazam"
+
+[social.params]
+icon = "chess"
