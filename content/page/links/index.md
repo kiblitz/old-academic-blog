@@ -3,7 +3,7 @@ title: Links
 links:
 menu:
     main: 
-        weight: 4
+        weight: 5
         params:
             icon: link
 
