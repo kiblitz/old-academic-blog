@@ -10,6 +10,7 @@ categories:
     - data structures
 tags:
     - splay tree
+    - binary tree
     - amortized analysis
 ---
 
@@ -264,7 +265,7 @@ a                                 b
 >
 > : Since $r(\cdot)$ is integral and $r_\text{prev}(a)<r_\text{prev}(b)$,
 >
-> $$r_\text{prev}(a)+1\leq r_\text{prev}(b)$$
+> : $$r_\text{prev}(a)+1\leq r_\text{prev}(b)$$
 >
 > : As before, $r_\text{prev}(b)=r_\text{curr}(a)$, and all node ranks are upper bounded by those of their parents.
 >

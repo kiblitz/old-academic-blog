@@ -9,12 +9,16 @@ categories:
     - algorithms
 tags:
     - search
+    - kth priority element
+    - quick select
+    - deterministic select
     - las vegas
+    - randomness
     - derandomization
 ---
 
 ## Problem
-> Find the $k\text{th}$ smallest element in an unsorted array $A$ of size $n$.
+> Find the $k$th smallest element in an unsorted array $A$ of size $n$.
 
 Sorting has $\mathcal{O}(n\log n)$ time complexity and is overkill for this specific problem (solves for all $k$).
 
@@ -96,14 +100,14 @@ return 8
 >
 > **Proof**
 >
-> : Let $C(A, n, k)$ be the cost (number of comparisons) to find the $k\text{th}$ smallest element in an array $A$ of $n$ elements. Let $C(n) = \max_{A,k} C(A,n,k)$.
+> : Let $C(A, n, k)$ be the cost (number of comparisons) to find the $k$th smallest element in an array $A$ of $n$ elements. Let $C(n) = \max_{A,k} C(A,n,k)$.
 > {{< box info >}}Convince yourself that $C(A,n,k)$ doesn't depend on $A${{< /box >}}
 > : It takes $n - 1$ comparisons to split $A$ into $L$ and $G$. The sizes of the pieces take the same distribution as $p$, which is uniformly random. By our definition of $C$, we will always consider the larger of the two pieces in cost calculation.
 >
-> $$\mathbb{E}[C(n)] \leq (n-1) + \text{avg}[C(\frac{n}{2}),...,C(n-1)]$$
+> : $$\mathbb{E}[C(n)] \leq (n-1) + \text{avg}[C(\frac{n}{2}),...,C(n-1)]$$
 >
 > : Inductively, assume $\mathbb{E}[C(i)] \leq 4i$ for $i < n$ ($0$ comparisons when $n=1$ so the base case holds).
-> $$\begin{align*}\mathbb{E}[C(n)] &\leq (n-1) + \text{avg}[4(\frac{n}{2}),...,4(n-1)] \newline &\leq (n-1) + 4(\frac{3n}{4}) \newline &\leq 4n\end{align*}$$
+> : $$\begin{align*}\mathbb{E}[C(n)] &\leq (n-1) + \text{avg}[4(\frac{n}{2}),...,4(n-1)] \newline &\leq (n-1) + 4(\frac{3n}{4}) \newline &\leq 4n\end{align*}$$
 > {{<box important>}}Technically we assumed $n$ is even, but the proof is basically the same in the odd case{{</box>}}
 
 Thus, QuickSelect has $\mathcal{O}(n)$ time complexity.
@@ -122,7 +126,7 @@ Thus, QuickSelect has $\mathcal{O}(n)$ time complexity.
 >
 > {{<box important>}}There are some integrality issues (that we will ignore) which complicate the analysis, though the time complexity should be unaffected{{</box>}}
 > $\texttt{DeterministicSelect}(A, k)$
-> * If $|A| \leq \alpha$ then return $k\text{th}$ smallest value in $A$ by brute force
+> * If $|A| \leq \alpha$ then return $k$th smallest value in $A$ by brute force
 > * Let the pivot $p$ be $\texttt{ApproxMedian}(A)$
 > * Split $A$ into $L = \lbrace a | \thickspace a \in A \text{ and } a < p \rbrace$ and $G = \lbrace a | \thickspace a \in A \text{ and } a > p \rbrace$
 > * Recurse
@@ -221,7 +225,7 @@ return 5
 >
 > **Proof**
 >
-> : Let $C(A, n, k)$ be the worst-case cost to find the $k\text{th}$ smallest element in an array $A$ of $n$ elements and let $C(n) = \max_{A,k} C(A,n,k)$.
+> : Let $C(A, n, k)$ be the worst-case cost to find the $k$th smallest element in an array $A$ of $n$ elements and let $C(n) = \max_{A,k} C(A,n,k)$.
 >
 > : * Finding the median of a single group has constant cost (since its size is bounded by $\alpha$). Since there are a linear number of groups, this step has linear time complexity.
 >
@@ -232,10 +236,10 @@ return 5
 > : * The second recursive call to search from a sub-piece has time complexity $C(n - \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil)$ by the **ApproxMedian Bound Lemma**.
 {{<box info>}}Since in worst case we recurse on the larger sub-piece{{</box>}}
 >
-> $$C(n) \leq \gamma n + C(\frac{n}{\alpha}) + C(n - \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil)$$
+> : $$C(n) \leq \gamma n + C(\frac{n}{\alpha}) + C(n - \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil)$$
 {{<box info>}}$\gamma$ is a constant where its subexpression represents linear time complexity from the first two bullet points{{</box>}}
 > : Using $\alpha=5$
-> $$\begin{align*}C(n)&\leq \gamma n + C(\frac{n}{5}) + C(n - 3\lceil\frac{n}{10}\rceil)\newline&\leq \gamma n + C(\frac{n}{5}) + C(\frac{7n}{10})\newline&\leq \gamma n[1 + (\frac{1}{5} + \frac{7}{10}) + (\frac{1}{5}(\frac{1}{5} + \frac{7}{10}) + \frac{7}{10}(\frac{1}{5} + \frac{7}{10})) + ... ] \newline &\leq \gamma n[1 + (\frac{9}{10}) + (\frac{1}{5}\cdot\frac{9}{10} + \frac{7}{10}\cdot\frac{9}{10}) + ...] \newline &\leq \gamma n[1 + (\frac{9}{10}) + (\frac{9}{10})^2 + (\frac{9}{10})^3 + ...] \newline &\leq 10\gamma n \newline &\in \mathcal{O}(n)\end{align*}$$
+> : $$\begin{align*}C(n)&\leq \gamma n + C(\frac{n}{5}) + C(n - 3\lceil\frac{n}{10}\rceil)\newline&\leq \gamma n + C(\frac{n}{5}) + C(\frac{7n}{10})\newline&\leq \gamma n[1 + (\frac{1}{5} + \frac{7}{10}) + (\frac{1}{5}(\frac{1}{5} + \frac{7}{10}) + \frac{7}{10}(\frac{1}{5} + \frac{7}{10})) + ... ] \newline &\leq \gamma n[1 + (\frac{9}{10}) + (\frac{1}{5}\cdot\frac{9}{10} + \frac{7}{10}\cdot\frac{9}{10}) + ...] \newline &\leq \gamma n[1 + (\frac{9}{10}) + (\frac{9}{10})^2 + (\frac{9}{10})^3 + ...] \newline &\leq 10\gamma n \newline &\in \mathcal{O}(n)\end{align*}$$
 >
 > **Corollary**
 > : $\texttt{DeterministicSelect}$ has linear time complexity if $$\begin{align*}\frac{1}{\alpha} + 1 - \frac{1}{2\alpha}\lceil\frac{\alpha}{2}\rceil &< 1\newline\frac{1}{\alpha} - \frac{1}{2\alpha}\lceil\frac{\alpha}{2}\rceil &< 0\end{align*}$$

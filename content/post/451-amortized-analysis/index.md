@@ -8,7 +8,7 @@ categories:
     - 15-451
     - algorithms
 tags:
-    - binary
+    - binary counter
     - unbounded array
     - amortized analysis
 ---
@@ -225,4 +225,4 @@ In $10111\rightarrow 11000$, $\thickspace k=3$
 > : Thus, $ac_i=(k+1)+(-k+1)=2$.
 >
 > : Since $\Phi(S_n)\geq\Phi(S_0)\thickspace\forall n$,
-> $$\sum_ic_i\leq\sum_iac_i$$
+> : $$\sum_ic_i\leq\sum_iac_i$$

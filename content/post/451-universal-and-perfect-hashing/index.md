@@ -11,7 +11,8 @@ tags:
     - hashing
     - universal hashing
     - perfect hashing
-    - randomization
+    - randomness
+    - matrix
 ---
 ## Motivation
 

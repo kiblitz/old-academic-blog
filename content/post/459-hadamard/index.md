@@ -8,8 +8,10 @@ categories:
     - 15-459
     - quantum
 tags:
+    - hadamard
     - amplitude
     - probability
+    - randomness
 ---
 
 ## Probabilistic Computing Analogy

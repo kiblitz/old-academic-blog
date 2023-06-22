@@ -8,10 +8,11 @@ categories:
     - 15-451
     - algorithms
 tags:
-    - bounds
+    - theoretical bound
     - sorting
-    - graphs
-    - connectivity
+    - merge sort
+    - kth priority element
+    - graph connectivity
     - information theory
     - adversarial argument
 ---

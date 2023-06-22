@@ -10,6 +10,7 @@ categories:
 tags:
     - amplitude
     - logic gate
+    - matrix
 ---
 
 ## Qubit System Representations
