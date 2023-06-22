@@ -1,6 +1,10 @@
 ---
 title: Links
 links:
+  - title: Gentman Tan's blog
+    description: A technophile's personal blog
+    website: https://grok.zone/
+    image:
 menu:
     main: 
         weight: 4
