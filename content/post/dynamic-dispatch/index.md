@@ -14,25 +14,26 @@ tags:
 
 ## Introduction
 
-Suppose a class has the following structure.
+Suppose a class and its two children have the following structures.
 
-$\texttt{class Pet:}\newline
-\texttt{\qquad string name}\newline
-\texttt{\qquad int age}\newline
-$
-
-And it has two child classes.
-
-$\texttt{class Cat extends Pet:}\newline
-\texttt{\qquad string catBreed}\newline
-\text{}\newline
-\texttt{class Dog extends Pet:}\newline
-\texttt{\qquad string dogBreed}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Pet:}\newline
+&\texttt{\qquad string name}\newline
+&\texttt{\qquad int age}
+&\newline
+&\newline
+&\texttt{class Cat extends Pet:}\newline
+&\texttt{\qquad string catBreed}\newline
+&\text{}\newline
+&\texttt{class Dog extends Pet:}\newline
+&\texttt{\qquad string dogBreed}
+\end{align*}
+$$
 
 So maybe a person wants to keep track of their pets. Since both $\texttt{Cat}$ and $\texttt{Dog}$ are [subtypes](/p/subtyping/) of $\texttt{Pet}$, we can store them in a $\texttt{Pet}$ array.
 
-$\texttt{Pet[] pets}$
+$$\texttt{Pet[] pets}$$
 
 {{<box info>}}Note that elements in $\texttt{pets}$ won't know if they are a $\texttt{Cat}$ or $\texttt{Dog}$ so we can only access fields that belong to $\texttt{Pet}$ ($\texttt{name}$ and $\texttt{age}$).{{</box>}}
 
@@ -67,13 +68,16 @@ Now, no matter what a $\texttt{Pet pet}$ actually is, $\texttt{pet+0x0}$ is goin
 
 Now, let's add a function to our class hierarchy.
 
-$\texttt{class Pet:}\newline
-\texttt{\qquad string name}\newline
-\texttt{\qquad int age}\newline
-\text{}\newline
-\texttt{\qquad void noise():}\newline
-\texttt{\qquad\qquad print("pet noises")}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Pet:}\newline
+&\texttt{\qquad string name}\newline
+&\texttt{\qquad int age}\newline
+&\text{}\newline
+&\texttt{\qquad void noise():}\newline
+&\texttt{\qquad\qquad print("pet noises")}
+\end{align*}
+$$
 
 Could we do the same thing?
 
@@ -125,19 +129,21 @@ First, note that a method call $\texttt{pet.noise()}$ is syntactic sugar for $\t
 
 For example:
 
-$\texttt{Cat cat}\newline
-\texttt{Dog dog}\newline
-\texttt{cat.noise()}\newline
-\texttt{dog.noise()}\newline
-$
-
-Becomes the following:
-
-$\texttt{Cat cat}\newline
-\texttt{Dog dog}\newline
-\texttt{(.data+0x0)(cat)}\newline
-\texttt{(.data+0x0)(dog)}\newline
-$
+$$
+\begin{align*}
+&\texttt{Cat cat}\newline
+&\texttt{Dog dog}\newline
+&\texttt{cat.noise()}\newline
+&\texttt{dog.noise()}\newline
+\newline
+&\implies\newline
+\newline
+&\texttt{Cat cat}\newline
+&\texttt{Dog dog}\newline
+&\texttt{(.data+0x0)(cat)}\newline
+&\texttt{(.data+0x0)(dog)}
+\end{align*}
+$$
 {{</box>}}
 
 We save space on every object holding a pointer to $\texttt{noise}$ ($\texttt{+0x8}$ size per object). 
@@ -152,45 +158,52 @@ Let's take our code from above and modify it so that $\texttt{noise}$ is a virtu
 
 {{<box important>}}Other class data omitted.{{</box>}}
 
-$\texttt{class Pet:}\newline
-\texttt{\qquad void noise():}\newline
-\texttt{\qquad\qquad print("pet noises")}\newline
-\text{}\newline
-\texttt{class Cat extends Pet:}\newline
-\texttt{\qquad void noise():}\newline
-\texttt{\qquad\qquad print("meow")}\newline
-\text{}\newline
-\texttt{class Dog extends Pet:}\newline
-\texttt{\qquad void noise():}\newline
-\texttt{\qquad\qquad print("bark")}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Pet:}\newline
+&\texttt{\qquad void noise():}\newline
+&\texttt{\qquad\qquad print("pet noises")}\newline
+&\text{}\newline
+&\texttt{class Cat extends Pet:}\newline
+&\texttt{\qquad void noise():}\newline
+&\texttt{\qquad\qquad print("meow")}\newline
+&\text{}\newline
+&\texttt{class Dog extends Pet:}\newline
+&\texttt{\qquad void noise():}\newline
+&\texttt{\qquad\qquad print("bark")}
+\end{align*}
+$$
 
 The children can override the definition of a virtual method (in this case, $\texttt{noise}$).
 
 {{<box info>}}Note that if the child does not provide a definition override, it keeps the parent's definition (recursively).
 
-$
-\texttt{class Fish extends Pet:}\newline
-\texttt{\qquad string color}\newline
-\text{}\newline
-\texttt{Fish fish}\newline
-\texttt{fish.noise()\qquad\thickspace\thickspace// "pet noises"}\newline
-\text{}\newline
-\texttt{class Betta extends Fish:}\newline
-\texttt{\qquad string bettaSpecies}\newline
-\text{}\newline
-\texttt{Betta betta}\newline
-\texttt{betta.noise()\qquad// "pet noises"}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Fish extends Pet:}\newline
+&\texttt{\qquad string color}\newline
+&\text{}\newline
+&\texttt{Fish fish}\newline
+&\texttt{fish.noise()\qquad\thickspace\thickspace// "pet noises"}\newline
+&\text{}\newline
+&\texttt{class Betta extends Fish:}\newline
+&\texttt{\qquad string bettaSpecies}\newline
+&\text{}\newline
+&\texttt{Betta betta}\newline
+&\texttt{betta.noise()\qquad// "pet noises"}
+\end{align*}
+$$
 {{</box>}}
 
 The issue now is that we cannot know at compile-time which virtual function (in this case $\texttt{noise}$) to call.
 
-$
-\texttt{Pet[] pets = [Cat(), Dog()]}\newline
-\texttt{pets[0].noise()\qquad// Cat.noise() -> "meow"}\newline
-\texttt{pets[1].noise()\qquad// Dog.noise() -> "bark"}\newline
-$
+$$
+\begin{align*}
+&\texttt{Pet[] pets = [Cat(), Dog()]}\newline
+&\texttt{pets[0].noise()\qquad// Cat.noise() -> "meow"}\newline
+&\texttt{pets[1].noise()\qquad// Dog.noise() -> "bark"}
+\end{align*}
+$$
 
 {{<box important>}}
 One (naive) solution is to again provide the function pointer as part of the object's structure.
@@ -258,37 +271,42 @@ Enter the [virtual method table](https://en.wikipedia.org/wiki/Virtual_method_ta
 
 With vtables, only the appropriate vtable sizes increase (and it is expected that there are significantly less vtables than object instances).{{</box>}}
 
-$
-\texttt{Pet[] pets = [Cat(), Dog()]}\newline
-\texttt{pets[0].noise()}\newline
-\texttt{pets[1].noise()}\newline
-\texttt{/*}\newline
-\texttt{ * vptr = pets[\textit{x}]+0x0}\newline
-\texttt{ * vtable = \\&vptr}\newline
-\texttt{ * noise = vtable+0x0}\newline
-\texttt{ */}\newline
-$
+$$
+\begin{align*}
+&\texttt{Pet[] pets = [Cat(), Dog()]}\newline
+&\texttt{pets[0].noise()}\newline
+&\texttt{pets[1].noise()}\newline
+&\texttt{/* }\newline
+&\texttt{ * vptr = pets[\textit{x}]+0x0}\newline
+&\texttt{ * vtable = \\&vptr}\newline
+&\texttt{ * noise = vtable+0x0}\newline
+&\texttt{ \*/}
+\end{align*}
+$$
 
 This also works with inheritance lineages. Suppose that $\texttt{Pet}$ is a child class of $\texttt{Thing}$.
 
 {{<box important>}}Other class data omitted.{{</box>}}
 
-$\texttt{class Thing:}\newline
-\texttt{\qquad string class():}\newline
-\texttt{\qquad \qquad return "Thing"}\newline
-\text{}\newline
-\texttt{class Pet extends Thing:}\newline
-\texttt{\qquad string class():}\newline
-\texttt{\qquad \qquad return "Pet"}\newline
-\text{}\newline
-\texttt{class Dog extends Pet:}\newline
-\texttt{\qquad string class():}\newline
-\texttt{\qquad \qquad return "Dog"}\newline
-\text{}\newline
-\texttt{class Cat extends Pet:}\newline
-\texttt{\qquad string class():}\newline
-\texttt{\qquad \qquad return "Cat"}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Thing:}\newline
+&\texttt{\qquad string class():}\newline
+&\texttt{\qquad \qquad return "Thing"}\newline
+&\text{}\newline
+&\texttt{class Pet extends Thing:}\newline
+&\texttt{\qquad string class():}\newline
+&\texttt{\qquad \qquad return "Pet"}\newline
+&\text{}\newline
+&\texttt{class Dog extends Pet:}\newline
+&\texttt{\qquad string class():}\newline
+&\texttt{\qquad \qquad return "Dog"}\newline
+&\text{}\newline
+&\texttt{class Cat extends Pet:}\newline
+&\texttt{\qquad string class():}\newline
+&\texttt{\qquad \qquad return "Cat"}
+\end{align*}
+$$
 
 ```goat
 
@@ -351,29 +369,32 @@ $
 
 New example.
 
-$\texttt{class Printable:}\newline
-\texttt{\qquad \qquad string output}\newline
-\text{}\newline
-\texttt{\qquad void print():}\newline
-\texttt{\qquad \qquad print(output)}\newline
-\text{}\newline
-\texttt{class Stringable:}\newline
-\texttt{\qquad \qquad string value}\newline
-\text{}\newline
-\texttt{\qquad string toString():}\newline
-\texttt{\qquad \qquad return value}\newline
-\text{}\newline
-\texttt{class Person extends Printable, Stringable:}\newline
-\texttt{\qquad string name}\newline
-\text{}\newline
-\texttt{\qquad void print():}\newline
-\texttt{\qquad \qquad print(output)}\newline
-\texttt{\qquad \qquad print(value)}\newline
-\texttt{\qquad \qquad print(name)}\newline
-\text{}\newline
-\texttt{\qquad string toString():}\newline
-\texttt{\qquad \qquad return output + value + name}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Printable:}\newline
+&\texttt{\qquad string output}\newline
+&\text{}\newline
+&\texttt{\qquad void print():}\newline
+&\texttt{\qquad \qquad print(output)}\newline
+&\text{}\newline
+&\texttt{class Stringable:}\newline
+&\texttt{\qquad string value}\newline
+&\text{}\newline
+&\texttt{\qquad string toString():}\newline
+&\texttt{\qquad \qquad return value}\newline
+&\text{}\newline
+&\texttt{class Person extends Printable, Stringable:}\newline
+&\texttt{\qquad string name}\newline
+&\text{}\newline
+&\texttt{\qquad void print():}\newline
+&\texttt{\qquad \qquad print(output)}\newline
+&\texttt{\qquad \qquad print(value)}\newline
+&\texttt{\qquad \qquad print(name)}\newline
+&\text{}\newline
+&\texttt{\qquad string toString():}\newline
+&\texttt{\qquad \qquad return output + value + name}
+\end{align*}
+$$
 
 Ok, so now we can have two parents. How can we possibly represent this in memory?
 
@@ -405,26 +426,26 @@ What ordering can we keep?
 If we put $\texttt{print}$ first in the $\texttt{Person}$ vtable, $\texttt{toString}$ calls and $\texttt{value}$ accesses fail.
 
 {{<box warning>}}
-$
-\texttt{Stringable[] stringables = [Stringable(), Person()]}\newline
-\texttt{Stringable[0].toString()}\newline
-\texttt{Stringable[1].toString()}\newline
-\texttt{/*}\newline
-\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
-\texttt{ * vtable = \\&vptr}\newline
-\texttt{ * toString = vtable+???}\newline
-\texttt{ * // 0x0 in Stringable.vtable; 0x8 in Person.vtable}\newline
-\texttt{ */}\newline
-$
-
-$
-\texttt{Stringable[0].value}\newline
-\texttt{Stringable[1].value}\newline
-\texttt{/*}\newline
-\texttt{ * value = stringables[\textit{x}]+???}\newline
-\texttt{ * // 0x0 in Stringable layout; 0x8 in Person layout}\newline
-\texttt{ */}\newline
-$
+$$
+\begin{align*}
+&\texttt{Stringable[] stringables = [Stringable(), Person()]}\newline
+&\texttt{Stringable[0].toString()}\newline
+&\texttt{Stringable[1].toString()}\newline
+&\texttt{/* }\newline
+&\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
+&\texttt{ * vtable = \\&vptr}\newline
+&\texttt{ * toString = vtable+???}\newline
+&\texttt{ * // 0x0 in Stringable.vtable; 0x8 in Person.vtable}\newline
+&\texttt{ \*/}\newline
+&\newline
+&\texttt{Stringable[0].value}\newline
+&\texttt{Stringable[1].value}\newline
+&\texttt{/* }\newline
+&\texttt{ * value = stringables[\textit{x}]+???}\newline
+&\texttt{ * // 0x0 in Stringable layout; 0x8 in Person layout}\newline
+&\texttt{ \*/}
+\end{align*}
+$$
 {{</box>}}
 
 ### The Solution
@@ -467,8 +488,11 @@ Person.Stringable.vtable ---> +-----------------+
 > The key idea is this: whenever we pass a $\texttt{Person}$ where $\texttt{Stringable}$ is expected, it is replaced at compile-time with the $\texttt{stringable}$ address $\texttt{person+0x10}$.
 
 {{<box info>}}
-$$\texttt{\\&person}\neq\texttt{\\&cast<Stringable\>(person)}$$
-$$\texttt{\\&person+0x10}=\texttt{\\&cast<Stringable\>(person)}$$
+$$\begin{align*}
+\texttt{\\&person}&\neq\texttt{\\&cast<Stringable\>(person)}\newline
+\texttt{\\&person+0x10}&=\texttt{\\&cast<Stringable\>(person)}
+\end{align*}
+$$
 {{</box>}}
 
 ```goat
@@ -486,25 +510,25 @@ Person.Stringable.vtable ---> +-----------------+
                               +-----------------+                   
 ```
 
-$
-\texttt{Person person = Person()}\newline
-\texttt{Stringable[] stringables = [Stringable(), person] // person+0x10}\newline
-\texttt{Stringable[0].toString()}\newline
-\texttt{Stringable[1].toString()}\newline
-\texttt{/*}\newline
-\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
-\texttt{ * vtable = \\&vptr}\newline
-\texttt{ * toString = vtable+0x0}\newline
-\texttt{ */}\newline
-$
-
-$
-\texttt{Stringable[0].value}\newline
-\texttt{Stringable[1].value}\newline
-\texttt{/*}\newline
-\texttt{ * value = stringables[\textit{x}]+0x8}\newline
-\texttt{ */}\newline
-$
+$$
+\begin{align*}
+&\texttt{Person person = Person()}\newline
+&\texttt{Stringable[] stringables = [Stringable(), person] // person+0x10}\newline
+&\texttt{Stringable[0].toString()}\newline
+&\texttt{Stringable[1].toString()}\newline
+&\texttt{/* }\newline
+&\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
+&\texttt{ * vtable = \\&vptr}\newline
+&\texttt{ * toString = vtable+0x0}\newline
+&\texttt{ \*/}\newline
+\newline
+&\texttt{Stringable[0].value}\newline
+&\texttt{Stringable[1].value}\newline
+&\texttt{/* }\newline
+&\texttt{ * value = stringables[\textit{x}]+0x8}\newline
+&\texttt{ \*/}
+\end{align*}
+$$
 
 Relative memory location is consistent!
 
@@ -555,20 +579,20 @@ We've added two new entries to the $\texttt{Person.vtable}$: the top offsets.
 
 > Recall that $\texttt{person.toString()}$ is syntactic sugar for $\texttt{Person.toString(person)}$. So now, when we call functions in the vtable, instead of passing the object address, we pass the object address *plus the top offset* (which gives a pointer to the original object). This is called **this pointer adjustment**.
 
-$
-\texttt{Person person = Person()}\newline
-\texttt{Stringable[] stringables = [Stringable(), person] // person+0x10}\newline
-\texttt{Stringable[0].toString()}\newline
-\texttt{Stringable[1].toString()}\newline
-\texttt{/*}\newline
-\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
-\texttt{ * vtable = \\&vptr}\newline
-\texttt{ * toString = vtable+0x8}\newline
-\texttt{ * topOffset = *(vtable+0x0)}\newline
-\texttt{ * this = stringables[\textit{x}]+topOffset}\newline
-\texttt{ * toString(this)}\newline
-\texttt{ */}\newline
-$
+$$\begin{align*}
+&\texttt{Person person = Person()}\newline
+&\texttt{Stringable[] stringables = [Stringable(), person] // person+0x10}\newline
+&\texttt{Stringable[0].toString()}\newline
+&\texttt{Stringable[1].toString()}\newline
+&\texttt{/* }\newline
+&\texttt{ * vptr = stringables[\textit{x}]+0x0}\newline
+&\texttt{ * vtable = \\&vptr}\newline
+&\texttt{ * toString = vtable+0x8}\newline
+&\texttt{ * topOffset = \*(vtable+0x0)}\newline
+&\texttt{ * this = stringables[\textit{x}]+topOffset}\newline
+&\texttt{ * toString(this)}\newline
+&\texttt{ \*/}
+\end{align*}$$
 
 Now, $\texttt{output}$ is at $\texttt{this+0x8}$.
 

@@ -47,27 +47,24 @@ $$\texttt{int}<:\texttt{float}$$
 
 #### Class Hierarchy
 
-Suppose a class has the following structure.
+Suppose a class lineage has the following structures.
 
-$\texttt{class Animal:}\newline
-\texttt{\qquad string name}\newline
-\texttt{\qquad int age}\newline
-\texttt{\qquad void}\rightarrow\texttt{void makeNoise}\newline
-$
-
-And it has a child class.
-
-$\texttt{class Mammal extends Animal:}\newline
-\texttt{\qquad string furColor}\newline
-$
-
-And it has a child class.
-
-$\texttt{class Human extends Mammal:}\newline
-\texttt{\qquad string occupation}\newline
-\texttt{\qquad int netWorth}\newline
-\texttt{\qquad void}\rightarrow\texttt{int doTaxes}\newline
-$
+$$
+\begin{align*}
+&\texttt{class Animal:}\newline
+&\texttt{\qquad string name}\newline
+&\texttt{\qquad int age}\newline
+&\texttt{\qquad void}\rightarrow\texttt{void makeNoise}\newline
+&\newline
+&\texttt{class Mammal extends Animal:}\newline
+&\texttt{\qquad string furColor}\newline
+&\newline
+&\texttt{class Human extends Mammal:}\newline
+&\texttt{\qquad string occupation}\newline
+&\texttt{\qquad int netWorth}\newline
+&\texttt{\qquad void}\rightarrow\texttt{int doTaxes}
+\end{align*}
+$$
 
 By definition of class hierarchy, a child has every characteristic its parent has. For example, $\texttt{Human}$ has a $\texttt{furColor}$, and transitively, since $\texttt{Mammal}$ has a $\texttt{name}$ (among other things), so does $\texttt{Human}$.
 
@@ -88,25 +85,30 @@ The notion of width subtyping can be extended to datatypes without hierarchical 
 
 For example, suppose there are two unrelated datatypes with the following definitions.
 
-$\texttt{struct Named:}\newline
-\texttt{\qquad string name}\newline
-$
-
-$\texttt{struct User:}\newline
-\texttt{\qquad string name}\newline
-\texttt{\qquad string age}\newline
-$
+$$
+\begin{align*}
+&\texttt{struct Named:}\newline
+&\texttt{\qquad string name}\newline
+&\newline
+&\texttt{struct User:}\newline
+&\texttt{\qquad string name}\newline
+&\texttt{\qquad string age}
+\end{align*}
+$$
 
 They have no explicit relationship. However, it sort of makes sense that whenever a program expects a $\texttt{Named}$ entity that we can pass it a $\texttt{User}$ (since anything a $\texttt{Named}$ has, a $\texttt{User}$ also has).
 
 {{<box info>}} Example:
 
-$\texttt{func rename(Named entity, string newName):}\newline
-\texttt{\qquad entity.name = newName}\newline
-\text{}\newline
-\texttt{User user = }\lbrace\texttt{name: "glee", age: 1000}\rbrace\newline
-\texttt{rename(user, "not glee")}
-$
+$$
+\begin{align*}
+&\texttt{func rename(Named entity, string newName):}\newline
+&\texttt{\qquad entity.name = newName}\newline
+&\text{}\newline
+&\texttt{User user = }\lbrace\texttt{name: "glee", age: 1000}\rbrace\newline
+&\texttt{rename(user, "not glee")}
+\end{align*}
+$$
 {{</box>}}
 
 This can get fairly messy to type check in various type systems.
@@ -119,13 +121,15 @@ This can get fairly messy to type check in various type systems.
 
 Instead of subtyping at the top level, could we subtype at the field level (and thus, their fields recursively)?
 
-$\texttt{class LivingSpace:}\newline
-\texttt{\qquad Animal resident}\newline
-$
-
-$\texttt{class Studio:}\newline
-\texttt{\qquad Human resident}\newline
-$
+$$
+\begin{align*}
+&\texttt{class LivingSpace:}\newline
+&\texttt{\qquad Animal resident}\newline
+&\newline
+&\texttt{class Studio:}\newline
+&\texttt{\qquad Human resident}
+&\end{align*}
+$$
 
 Does $\texttt{Studio} <: \texttt{LivingSpace}$?
 
@@ -133,21 +137,27 @@ Does $\texttt{Studio} <: \texttt{LivingSpace}$?
 
 It might make sense logically that if our program requires a $\texttt{LivingSpace}$ that we may provide it with a $\texttt{Studio}$ since the latter can do anything the former can do (in this case, provide $\texttt{resident.name}$).
 
-$\texttt{func owner(LivingSpace home)} \rightarrow \texttt{string:}\newline
-\texttt{\qquad return home.resident.name}\newline
-\text{}\newline
-\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
-\texttt{print(owner(studio))}
-$
+$$
+\begin{align*}
+&\texttt{func owner(LivingSpace home)} \rightarrow \texttt{string:}\newline
+&\texttt{\qquad return home.resident.name}\newline
+&\text{}\newline
+&\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
+&\texttt{print(owner(studio))}
+\end{align*}
+$$
 
 #### Caveat
 
-$\texttt{func reassignResident(LivingSpace home, Animal newResident):}\newline
-\texttt{\qquad home.resident = newResident}\newline
-\text{}\newline
-\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
-\texttt{reassignResident(studio, }\lbrace- \textit{some animal } -\rbrace)
-$
+$$
+\begin{align*}
+&\texttt{func reassignResident(LivingSpace home, Animal newResident):}\newline
+&\texttt{\qquad home.resident = newResident}\newline
+&\text{}\newline
+&\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
+&\texttt{reassignResident(studio, }\lbrace- \textit{some animal } -\rbrace)
+\end{align*}
+$$
 
 Ah, so here's where it breaks down. We want to assign our subtyped field. But the true underlying structure requires more!
 
@@ -160,19 +170,25 @@ $\texttt{reassignResident}$ is under the impression that an $\texttt{Animal}$ is
 ### Introduction
 Functions are values. So how do we typecheck function assignment? We'll reuse some types from above.
 
-$\texttt{Mammal} \rightarrow \texttt{Mammal someFunction}=\ldots\newline
-\texttt{Mammal input = }\lbrace\ldots\rbrace\newline
-\texttt{Mammal output = someFunction(input)}\newline
-$
+$$
+\begin{align*}
+&\texttt{Mammal} \rightarrow \texttt{Mammal someFunction}=\ldots\newline
+&\texttt{Mammal input = }\lbrace\ldots\rbrace\newline
+&\texttt{Mammal output = someFunction(input)}
+\end{align*}
+$$
 
 The question is: what types can we assign to $\texttt{someFunction}$?
 
 ### Outputs
 Let's trial and error, and try to reason the solution out.
 
-$\texttt{Mammal} \rightarrow \texttt{Human functionValue}=\ldots\newline
-\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}\newline
-$
+$$
+\begin{align*}
+&\texttt{Mammal} \rightarrow \texttt{Human functionValue}=\ldots\newline
+&\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$
 
 $\texttt{functionValue}$ returns a $\texttt{Human}$. Executions of $\texttt{someFunction}$ expect a return value that can do everything a $\texttt{Mammal}$ can do, which a $\texttt{Human}$ satisfies. This works.
 
@@ -182,9 +198,12 @@ $$\texttt{actualOutput} <: \texttt{expectedOutput}$$
 
 For sake of clarity, let's try it the other way.
 
-$\texttt{Mammal} \rightarrow \texttt{Animal functionValue}=\ldots\newline
-\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}}\newline
-$
+$$
+\begin{align*}
+&\texttt{Mammal} \rightarrow \texttt{Animal functionValue}=\ldots\newline
+&\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}}
+\end{align*}
+$$
 
 Clearly, an execution to $\texttt{someFunction}$ which expects a $\texttt{Mammal}$ return type will miss out on the $\texttt{furColor}$ attribute.
 
@@ -192,17 +211,23 @@ Clearly, an execution to $\texttt{someFunction}$ which expects a $\texttt{Mammal
 
 Again, let's trial and error.
 
-$\texttt{Human} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
-\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}\newline}
-$
+$$
+\begin{align*}
+&\texttt{Human} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
+&\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}}
+\end{align*}
+$$
 
 Clearly, whatever we provide as input must be able to do whatever $\texttt{someFunction}$ requires of it. If we provide $\texttt{Mammal}$, $\texttt{functionValue}$ expects a $\texttt{Human}$ which might use attributes like $\texttt{occupation}$ which aren't present in $\texttt{Mammal}$.
 
 ---
 
-$\texttt{Animal} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
-\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}\newline
-$
+$$
+\begin{align*}
+&\texttt{Animal} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
+&\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$
 
 Providing $\texttt{someFunction}$ with an input that can do at least what $\texttt{Mammal}$ can do will allow it to safely be used as input to its value, $\texttt{functionValue}$.
 
@@ -212,9 +237,12 @@ $$\texttt{expectedInput} <: \texttt{actualInput}$$
 
 It's a little counterintuitive, but the inputs and outputs of a function subtype have opposite directionality (as we saw above).
 
-$\texttt{Animal} \rightarrow \texttt{Human functionValue}=\ldots\newline
-\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}\newline
-$
+$$
+\begin{align*}
+&\texttt{Animal} \rightarrow \texttt{Human functionValue}=\ldots\newline
+&\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$
 
 > $$\begin{align*}
 \texttt{I}&\texttt{'} <:\texttt{I}\newline
