@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>logic gate on glee</title><link>https://kiblitz.github.io/tags/logic-gate/</link><description>Recent content in logic gate on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 10 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/logic-gate/index.xml" rel="self" type="application/rss+xml"/><item><title>II. Quantum Computing Foundations</title><link>https://kiblitz.github.io/p/quantum-computing-foundations/</link><pubDate>Sat, 10 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/quantum-computing-foundations/</guid><description>&lt;img src="https://kiblitz.github.io/p/quantum-computing-foundations/mountain_winter.jpeg" alt="Featured image of post II. Quantum Computing Foundations" />&lt;h2 id="qubit-system-representations">Qubit System Representations&lt;/h2>
+&lt;h3 id="single-qubit-recap">Single Qubit Recap&lt;/h3>
+&lt;p>Previously, we saw that a single qubit can be represented as a pair of amplitudes.
+$$A=\begin{bmatrix} v_0 \newline v_1 \end{bmatrix}$$
+$$\text{OR}$$
+$$A=v_0|0\rangle + v_1|1\rangle$$
+Where $v_0$ represents $A$&amp;rsquo;s amplitude on $0$ and $v_1$ represents $A$&amp;rsquo;s amplitude on $1$.&lt;/p>
+&lt;h3 id="extending-to-multi-qubit-states">Extending to Multi-Qubit States&lt;/h3>
+&lt;p>In $q$-qubit systems, the representing vectors are $2^q$-dimensional where each component&amp;rsquo;s magnitude represents the amplitude on a specific value. The mapping of axis to value follows from the tensor product order.
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Suppose $AB$ had the following state.
+$$AB=v_{00}|00\rangle + v_{01}|01\rangle + v_{10}|10\rangle + v_{11}|11\rangle$$
+The corresponding vector would be the following.
+$$AB=\begin{bmatrix} v_{00} \newline v_{01} \newline v_{10} \newline v_{11} \end{bmatrix}$$&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;h2 id="classical-quantum-gates">Classical Quantum Gates&lt;/h2>
+&lt;p>With the exception of qubit initialization, quantum computing operations are all bijective modifications on their input qubits with no outputs.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The reason for this strict rule is for &lt;a class="link" href="https://en.wikipedia.org/wiki/Reversible_computing" target="_blank" rel="noopener"
+>computational reversibility&lt;/a> which is essential for taking out the garbage (to be explained in a later post).&lt;/p>
+&lt;p>This is why qubit value assignment isn&amp;rsquo;t possible. It is not possible to reverse the assigned value $o$ since every possible input $i$ maps to $o$.&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;h3 id="definitions">Definitions&lt;/h3>
+&lt;h4 id="initialize">Initialize&lt;/h4>
+&lt;p>$\texttt{INIT}(A)$&lt;/p>
+&lt;p>Creates a new qubit $A$ with full amplitude on value $0$.&lt;/p>
+&lt;p>$$\begin{bmatrix} 1 \newline 0 \end{bmatrix}$$&lt;/p>
+&lt;h4 id="not">Not&lt;/h4>
+&lt;p>$\texttt{NOT}(A)$&lt;/p>
+&lt;p>Negates $A$. In other words, adds $1$ to qubit $A$ ($\bmod\thickspace2$).&lt;/p>
+&lt;p>$$\begin{bmatrix} 0 &amp;amp; 1 \newline 1 &amp;amp; 0 \end{bmatrix}$$&lt;/p>
+&lt;h4 id="controlled-not">Controlled Not&lt;/h4>
+&lt;p>$\texttt{CNOT}(AB)$&lt;/p>
+&lt;p>If $A=1$ then negates $B$. In other words, adds $A$ to qubit $B$ ($\bmod\thickspace2$).&lt;/p>
+&lt;p>$$\begin{bmatrix} 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \newline 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \newline 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0\end{bmatrix}$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$
+\begin{array}{c|c}
+AB &amp;amp; \texttt{CNOT}(AB) \newline
+00 &amp;amp; 00 \newline
+01 &amp;amp; 01 \newline
+\boxed{10} &amp;amp; 11 \newline
+\boxed{11} &amp;amp; 10
+\end{array}
+$$&lt;/p>
+&lt;/div>
+&lt;h4 id="controlled-controlled-not">Controlled Controlled Not&lt;/h4>
+&lt;p>$\texttt{CCNOT}(ABC)$&lt;/p>
+&lt;p>If $A=1$ and $B=1$ then negates $C$. In other words, adds $A\And B$ to qubit $C$ ($\bmod\thickspace 2$).&lt;/p>
+&lt;p>$$\begin{bmatrix}
+1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \newline
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \newline
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0
+\end{bmatrix}$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$
+\begin{array}{c|c}
+ABC &amp;amp; \texttt{CCNOT}(ABC) \newline
+000 &amp;amp; 000 \newline
+001 &amp;amp; 001 \newline
+010 &amp;amp; 010 \newline
+011 &amp;amp; 011 \newline
+100 &amp;amp; 100 \newline
+101 &amp;amp; 101 \newline
+\boxed{110} &amp;amp; 111 \newline
+\boxed{111} &amp;amp; 110
+\end{array}
+$$&lt;/p>
+&lt;/div>
+&lt;h3 id="syntactic-sugar">Syntactic Sugar&lt;/h3>
+&lt;p>Sometimes we will define/use a subroutine $F(X_1X_2&amp;hellip;X_n)$ that outputs a value which we later execute in some pseudocode fashion (i.e. $\text{If }F(AB)\text{ Then}&amp;hellip;$). But technically returning a value isn&amp;rsquo;t allowed.&lt;/p>
+&lt;p>This is just syntactic sugar for creating a temporary qubit $T$ and applying $F$&amp;rsquo;s logic to modify $T$ as the output.
+$$\texttt{INIT}(T)\newline &amp;hellip;\newline \text{// Apply $F$ logic onto $T$}\newline &amp;hellip; \newline\text{If }T\text{ Then}&amp;hellip;$$&lt;/p>
+&lt;p>Also note that since quantum computation must be reversible, branching must be done intelligently.
+For example, $\text{If}$ branches are syntactic sugar for controlled operations ($\texttt{CTRUEBRANCH}(T&amp;hellip;)$).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Example for negation of adding $\texttt{CCNOT}$ to input.
+$$
+\begin{array}{c|c}
+\text{compiled} &amp;amp; \text{syntactic sugar} \newline\newline
+\texttt{INIT}(A) &amp;amp; \texttt{INIT}(A) \newline
+\texttt{INIT}(B) &amp;amp; \texttt{INIT}(B) \newline
+\texttt{INIT}(C) &amp;amp; \texttt{INIT}(C) \newline
+\texttt{INIT}(D) &amp;amp; \texttt{INIT}(D) \newline
+\texttt{INIT}(T_1) &amp;amp; \newline
+\texttt{INIT}(T_2) &amp;amp; \newline
+&amp;amp; \texttt{def F}(X_1X_2)\lbrace \newline
+&amp;amp; \texttt{INIT}(T) \newline
+&amp;amp; \texttt{NOT}(X_1) \newline
+&amp;amp; \texttt{NOT}(X_2) \newline
+&amp;amp; \texttt{CCNOT}(X_1X_2T) \newline
+&amp;amp; \texttt{NOT}(X_1) \newline
+&amp;amp; \texttt{NOT}(X_2) \newline
+&amp;amp; \texttt{Output }T \newline
+&amp;amp; \rbrace\quad\quad\quad\quad\quad\quad \newline
+&amp;amp; \newline
+\texttt{NOT}(A) &amp;amp; \texttt{If F}(AB)\texttt{ Then}\lbrace \newline
+\texttt{NOT}(B) &amp;amp; \newline
+\texttt{CCNOT}(ABT_1) &amp;amp; \newline
+\texttt{NOT}(A) &amp;amp; \newline
+\texttt{NOT}(B) &amp;amp; \newline
+\texttt{CNOT}(T_1A)&amp;amp; \texttt{NOT}(A) \newline
+\texttt{CNOT}(T_1B)&amp;amp; \texttt{NOT}(B) \newline
+&amp;amp; \rbrace\quad\quad\quad\quad\quad\quad\quad \newline
+&amp;amp; \newline
+\texttt{NOT}(C) &amp;amp; \texttt{If F}(CD)\texttt{ Then}\lbrace \newline
+\texttt{NOT}(D) &amp;amp; \newline
+\texttt{CCNOT}(CDT_2) &amp;amp; \newline
+\texttt{NOT}(C) &amp;amp; \newline
+\texttt{NOT}(D) &amp;amp; \newline
+\texttt{CCNOT}(T_2CD)&amp;amp; \texttt{CNOT}(CD) \newline
+&amp;amp; \rbrace\quad\quad\quad\quad\quad\quad\quad \newline
+\end{array}
+$$&lt;/p>
+&lt;/div></description></item></channel></rss>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>type checking on glee</title><link>https://kiblitz.github.io/tags/type-checking/</link><description>Recent content in type checking on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 09 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/type-checking/index.xml" rel="self" type="application/rss+xml"/><item><title>Type Checking: Subtyping</title><link>https://kiblitz.github.io/p/subtyping/</link><pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/subtyping/</guid><description>&lt;img src="https://kiblitz.github.io/p/subtyping/purple.jpg" alt="Featured image of post Type Checking: Subtyping" />&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>At the very least when it comes to types, something of type $\texttt{A}$ can be used whenever something of type $\texttt{A}$ is expected.&lt;/p>
+&lt;p>$\texttt{int a = 5}\newline\texttt{float b = 5.0}$&lt;/p>
+&lt;p>Is there any leeway for flexibility? Specifically, does there exist a notion of type substitutability?&lt;/p>
+&lt;hr>
+&lt;p>$\texttt{float b = 5}$&lt;/p>
+&lt;p>This makes sense because an $\texttt{int}$ is a subset of a $\texttt{float}$. In other words, a $\texttt{float}$ can do anything an $\texttt{int}$ can do.&lt;/p>
+&lt;p>$\cancel{\texttt{int b = 5.0}}$&lt;/p>
+&lt;p>This won&amp;rsquo;t work. An $\texttt{int}$ cannot do everything a $\texttt{float}$ can do (cannot represent all of its values). A quick way to break this is: $$\texttt{int b = 5.5}$$&lt;/p>
+&lt;h2 id="definition">Definition&lt;/h2>
+&lt;p>$S &amp;lt;: T$ means that $S$ is a subtype of $T$.&lt;/p>
+&lt;p>This means that anything of type $S$ can be used whenever type $T$ is expected.&lt;/p>
+&lt;p>So in the above example:
+$$\texttt{int}&amp;lt;:\texttt{float}$$&lt;/p>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode tip" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#tip-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>You can think of it as $S$ is &lt;em>more&lt;/em> restrictive &lt;strong>(to typecheck)&lt;/strong> than $T$ since if you want to do something with $T$, you should also be able to do it with $S$.&lt;/p>
+&lt;/div>
+&lt;h2 id="structures">Structures&lt;/h2>
+&lt;h3 id="width-subtyping">Width Subtyping&lt;/h3>
+&lt;h4 id="class-hierarchy">Class Hierarchy&lt;/h4>
+&lt;p>Suppose a class lineage has the following structures.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{class Animal:}\newline
+&amp;amp;\texttt{\qquad string name}\newline
+&amp;amp;\texttt{\qquad int age}\newline
+&amp;amp;\texttt{\qquad void}\rightarrow\texttt{void makeNoise}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{class Mammal extends Animal:}\newline
+&amp;amp;\texttt{\qquad string furColor}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{class Human extends Mammal:}\newline
+&amp;amp;\texttt{\qquad string occupation}\newline
+&amp;amp;\texttt{\qquad int netWorth}\newline
+&amp;amp;\texttt{\qquad void}\rightarrow\texttt{int doTaxes}
+\end{align*}
+$$&lt;/p>
+&lt;p>By definition of class hierarchy, a child has every characteristic its parent has. For example, $\texttt{Human}$ has a $\texttt{furColor}$, and transitively, since $\texttt{Mammal}$ has a $\texttt{name}$ (among other things), so does $\texttt{Human}$.&lt;/p>
+&lt;p>Since children have everything their parents have (and thus can do anything the parents can do):
+$$\texttt{Human} &amp;lt;: \texttt{Mammal}$$
+$$\texttt{Mammal} &amp;lt;: \texttt{Animal}$$
+$$- \textit{and transitively } -$$
+$$\texttt{Human} &amp;lt;: \texttt{Animal}$$&lt;/p>
+&lt;p>Generally:&lt;/p>
+&lt;blockquote>
+&lt;p>$$\texttt{Child} &amp;lt;: \texttt{Parent}$$&lt;/p>
+&lt;/blockquote>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>This is called &lt;strong>width subtyping&lt;/strong> since supertypes (opposite of subtypes) contain a subset of fields (along the width of the class definition).&lt;/p>
+&lt;/div>
+&lt;h4 id="unrelated-structures">Unrelated structures&lt;/h4>
+&lt;p>The notion of width subtyping can be extended to datatypes without hierarchical relationships.&lt;/p>
+&lt;p>For example, suppose there are two unrelated datatypes with the following definitions.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{struct Named:}\newline
+&amp;amp;\texttt{\qquad string name}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{struct User:}\newline
+&amp;amp;\texttt{\qquad string name}\newline
+&amp;amp;\texttt{\qquad string age}
+\end{align*}
+$$&lt;/p>
+&lt;p>They have no explicit relationship. However, it sort of makes sense that whenever a program expects a $\texttt{Named}$ entity that we can pass it a $\texttt{User}$ (since anything a $\texttt{Named}$ has, a $\texttt{User}$ also has).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Example:&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{func rename(Named entity, string newName):}\newline
+&amp;amp;\texttt{\qquad entity.name = newName}\newline
+&amp;amp;\text{}\newline
+&amp;amp;\texttt{User user = }\lbrace\texttt{name: &amp;ldquo;glee&amp;rdquo;, age: 1000}\rbrace\newline
+&amp;amp;\texttt{rename(user, &amp;ldquo;not glee&amp;rdquo;)}
+\end{align*}
+$$&lt;/p>
+&lt;/div>
+&lt;p>This can get fairly messy to type check in various type systems.&lt;/p>
+&lt;ul>
+&lt;li>C++ has &lt;a class="link" href="https://en.wikipedia.org/wiki/Template_metaprogramming" target="_blank" rel="noopener"
+>template metaprogramming&lt;/a> (&lt;a class="link" href="https://en.wikipedia.org/wiki/Undecidable_problem" target="_blank" rel="noopener"
+>undecideable&lt;/a> and thus limited by recursion depth)&lt;/li>
+&lt;li>Python uses &lt;a class="link" href="https://en.wikipedia.org/wiki/Duck_typing" target="_blank" rel="noopener"
+>duck typing&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="depth-subtyping">Depth Subtyping&lt;/h3>
+&lt;h4 id="definition-1">Definition&lt;/h4>
+&lt;p>Instead of subtyping at the top level, could we subtype at the field level (and thus, their fields recursively)?&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{class LivingSpace:}\newline
+&amp;amp;\texttt{\qquad Animal resident}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{class Studio:}\newline
+&amp;amp;\texttt{\qquad Human resident}
+&amp;amp;\end{align*}
+$$&lt;/p>
+&lt;p>Does $\texttt{Studio} &amp;lt;: \texttt{LivingSpace}$?&lt;/p>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Notice that these cannot have hierarchical relationships.&lt;/p>
+&lt;/div>
+&lt;p>It might make sense logically that if our program requires a $\texttt{LivingSpace}$ that we may provide it with a $\texttt{Studio}$ since the latter can do anything the former can do (in this case, provide $\texttt{resident.name}$).&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{func owner(LivingSpace home)} \rightarrow \texttt{string:}\newline
+&amp;amp;\texttt{\qquad return home.resident.name}\newline
+&amp;amp;\text{}\newline
+&amp;amp;\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
+&amp;amp;\texttt{print(owner(studio))}
+\end{align*}
+$$&lt;/p>
+&lt;h4 id="caveat">Caveat&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{func reassignResident(LivingSpace home, Animal newResident):}\newline
+&amp;amp;\texttt{\qquad home.resident = newResident}\newline
+&amp;amp;\text{}\newline
+&amp;amp;\texttt{Studio studio = }\lbrace\texttt{resident: }\lbrace- \textit{some human} -\rbrace\rbrace\newline
+&amp;amp;\texttt{reassignResident(studio, }\lbrace- \textit{some animal } -\rbrace)
+\end{align*}
+$$&lt;/p>
+&lt;p>Ah, so here&amp;rsquo;s where it breaks down. We want to assign our subtyped field. But the true underlying structure requires more!&lt;/p>
+&lt;p>$\texttt{reassignResident}$ is under the impression that an $\texttt{Animal}$ is enough to fill up a $\texttt{LivingSpace}$, which is logically true. But if we pass $\texttt{reassignResident}$ a $\texttt{Studio}$, it should really expect a $\texttt{Human}$ instead of an $\texttt{Animal}$.&lt;/p>
+&lt;blockquote>
+&lt;p>It turns out that the breakdown occurs because of &lt;a class="link" href="https://en.wikipedia.org/wiki/Aliasing_%28computing%29#:~:text=In%20computing%2C%20aliasing%20describes%20a,symbolic%20names%20in%20the%20program." target="_blank" rel="noopener"
+>aliasing&lt;/a>. Thus, &lt;strong>depth subtyping&lt;/strong> works with &lt;em>immutable structures&lt;/em> (records).&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="functions">Functions&lt;/h2>
+&lt;h3 id="introduction-1">Introduction&lt;/h3>
+&lt;p>Functions are values. So how do we typecheck function assignment? We&amp;rsquo;ll reuse some types from above.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Mammal someFunction}=\ldots\newline
+&amp;amp;\texttt{Mammal input = }\lbrace\ldots\rbrace\newline
+&amp;amp;\texttt{Mammal output = someFunction(input)}
+\end{align*}
+$$&lt;/p>
+&lt;p>The question is: what types can we assign to $\texttt{someFunction}$?&lt;/p>
+&lt;h3 id="outputs">Outputs&lt;/h3>
+&lt;p>Let&amp;rsquo;s trial and error, and try to reason the solution out.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Human functionValue}=\ldots\newline
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$&lt;/p>
+&lt;p>$\texttt{functionValue}$ returns a $\texttt{Human}$. Executions of $\texttt{someFunction}$ expect a return value that can do everything a $\texttt{Mammal}$ can do, which a $\texttt{Human}$ satisfies. This works.&lt;/p>
+&lt;p>$$\texttt{actualOutput} &amp;lt;: \texttt{expectedOutput}$$&lt;/p>
+&lt;hr>
+&lt;p>For sake of clarity, let&amp;rsquo;s try it the other way.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Animal functionValue}=\ldots\newline
+&amp;amp;\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}}
+\end{align*}
+$$&lt;/p>
+&lt;p>Clearly, an execution to $\texttt{someFunction}$ which expects a $\texttt{Mammal}$ return type will miss out on the $\texttt{furColor}$ attribute.&lt;/p>
+&lt;h3 id="inputs">Inputs&lt;/h3>
+&lt;p>Again, let&amp;rsquo;s trial and error.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Human} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
+&amp;amp;\cancel{\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}}
+\end{align*}
+$$&lt;/p>
+&lt;p>Clearly, whatever we provide as input must be able to do whatever $\texttt{someFunction}$ requires of it. If we provide $\texttt{Mammal}$, $\texttt{functionValue}$ expects a $\texttt{Human}$ which might use attributes like $\texttt{occupation}$ which aren&amp;rsquo;t present in $\texttt{Mammal}$.&lt;/p>
+&lt;hr>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Animal} \rightarrow \texttt{Mammal functionValue}=\ldots\newline
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$&lt;/p>
+&lt;p>Providing $\texttt{someFunction}$ with an input that can do at least what $\texttt{Mammal}$ can do will allow it to safely be used as input to its value, $\texttt{functionValue}$.&lt;/p>
+&lt;p>$$\texttt{expectedInput} &amp;lt;: \texttt{actualInput}$$&lt;/p>
+&lt;h3 id="putting-it-all-together">Putting it All Together&lt;/h3>
+&lt;p>It&amp;rsquo;s a little counterintuitive, but the inputs and outputs of a function subtype have opposite directionality (as we saw above).&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{Animal} \rightarrow \texttt{Human functionValue}=\ldots\newline
+&amp;amp;\texttt{Mammal} \rightarrow \texttt{Mammal someFunction = functionValue}
+\end{align*}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>$$\begin{align*}
+\texttt{I}&amp;amp;\texttt{&amp;rsquo;} &amp;lt;:\texttt{I}\newline
+&amp;amp;\texttt{O} &amp;lt;:\texttt{O&amp;rsquo;}\newline
+&amp;amp;\implies\newline
+\texttt{I}\rightarrow\medspace&amp;amp;\texttt{O} &amp;lt;: \texttt{I&amp;rsquo;}\rightarrow\texttt{O&amp;rsquo;}
+\end{align*}$$&lt;/p>
+&lt;/blockquote></description></item></channel></rss>

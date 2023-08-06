@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>option on glee</title><link>https://kiblitz.github.io/tags/option/</link><description>Recent content in option on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 15 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/option/index.xml" rel="self" type="application/rss+xml"/><item><title>Monads</title><link>https://kiblitz.github.io/p/monads/</link><pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/monads/</guid><description>&lt;img src="https://kiblitz.github.io/p/monads/abstract1.png" alt="Featured image of post Monads" />&lt;h2 id="definition">Definition&lt;/h2>
+&lt;p>Monads are structures that wrap values. They are useful for creating computation pipelines that abstract away control flow and side effects.&lt;/p>
+&lt;h3 id="return-and-bind">Return and Bind&lt;/h3>
+&lt;p>A monad of type $\texttt{&amp;lsquo;a t}$ has the following functions.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{return: &amp;lsquo;a -&amp;gt; &amp;lsquo;a t}\newline
+&amp;amp;\texttt{bind: &amp;lsquo;a t -&amp;gt; (&amp;lsquo;a -&amp;gt; &amp;lsquo;b t) -&amp;gt; &amp;lsquo;b t}
+\end{align*}
+$$&lt;/p>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Monads are &lt;a class="link" href="https://en.wikipedia.org/wiki/Parametric_polymorphism" target="_blank" rel="noopener"
+>parametric types&lt;/a>. $\texttt{t}$ represents the monad itself and $\texttt{&amp;lsquo;a}$ is the type parameter.&lt;/p>
+&lt;p>For example, $\texttt{Option}$ is a monad. The value it wraps has the parameter type $\texttt{&amp;lsquo;a}$. So, you could have types like $\texttt{int Option}$ or $\texttt{string Option}$.&lt;/p>
+&lt;p>$\texttt{&amp;lsquo;b}$ is another parameter. Bind takes a function that essentially &amp;ldquo;maps&amp;rdquo; the current monad type parameter $\texttt{&amp;lsquo;a}$ to another monad of type $\texttt{&amp;lsquo;b}$.&lt;/p>
+&lt;/div>
+&lt;p>It helps to follow the types. $\texttt{return}$ constructs the monad from a value. $\texttt{bind}$ transforms the value within the monad (computation pipeline).&lt;/p>
+&lt;h3 id="map">Map&lt;/h3>
+&lt;p>The definition for the monadic function $\texttt{map}$ follows from the functions above.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{map: &amp;lsquo;a t -&amp;gt; (&amp;lsquo;a -&amp;gt; &amp;lsquo;b) -&amp;gt; &amp;lsquo;b t}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{let map t f =}\newline
+&amp;amp;\texttt{\qquad let g a = return (f a) in}\newline
+&amp;amp;\texttt{\qquad bind t g}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\texttt{map}$ is the same as $\texttt{bind}$ except the function ($\texttt{f}$) returns a raw $\texttt{&amp;lsquo;b}$ rather than a $\texttt{&amp;lsquo;b t}$.&lt;/p>
+&lt;p>Here, we construct the $\texttt{g}$ necessary for $\texttt{bind}$ by just applying $\texttt{return}$ to the result of $\texttt{f}$.&lt;/p>
+&lt;/div>
+&lt;h2 id="ocaml-ppx_let">OCaml ppx_let&lt;/h2>
+&lt;p>The &lt;a class="link" href="https://github.com/janestreet/ppx_let" target="_blank" rel="noopener"
+>ppx_let&lt;/a> library for OCaml provides an elegant way to code with monads.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Although The &lt;a class="link" href="https://github.com/janestreet/ppx_let" target="_blank" rel="noopener"
+>ppx_let&lt;/a> library introduces various monadic syntax (i.e. monadic pattern matching), we will only display monadic let bindings.&lt;/p>
+&lt;p>They work similarly to these monadic let bindings (see documentation).&lt;/p>
+&lt;/div>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let\%bind a = a\_monad in (* a : &amp;lsquo;a; a\_monad : &amp;lsquo;a t *)}\newline
+&amp;amp;\texttt{\qquad &amp;hellip;}\newline
+&amp;amp;\texttt{\qquad b\_monad (* b\_monad : &amp;lsquo;b t *)}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\texttt{(* &amp;hellip; *)}$ are comments.&lt;/p>
+&lt;/div>
+&lt;p>With this syntactic sugar, we define the function parameter in (call it $\texttt{f}$ with type $\texttt{&amp;lsquo;a -&amp;gt; &amp;lsquo;b t}$) in the body of the $\texttt{let\%bind}$, where $\texttt{a}$ is the parameter to $\texttt{f}$.&lt;/p>
+&lt;hr>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let\%map a = a\_monad in (* a : &amp;lsquo;a; a\_monad : &amp;lsquo;a t *)}\newline
+&amp;amp;\texttt{\qquad &amp;hellip;}\newline
+&amp;amp;\texttt{\qquad b (* b : &amp;lsquo;b *)}
+\end{align*}
+$$&lt;/p>
+&lt;p>$\texttt{let\%map}$ does basically the same thing except the return type of its body is just a $\texttt{&amp;lsquo;b}$ (as is in $\texttt{f}$ with type $\texttt{&amp;lsquo;a -&amp;gt; &amp;lsquo;b}$).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>These might be easier to grasp with the examples below.&lt;/p>
+&lt;/div>
+&lt;hr>
+&lt;p>Important to note that the type of the entire $\texttt{let\%bind}$ and $\texttt{let\%map}$ expressions are $\texttt{&amp;lsquo;b t}$, consistent with the return types of $\texttt{bind}$ and $\texttt{map}$.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Typically, to chain monadic operations we will end with a single $\texttt{let\%map}$. All previous bindings will be $\texttt{let\%bind}$.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let\%bind a = a\_monad in}\newline
+&amp;amp;\texttt{let\%bind b = b\_monad in}\newline
+&amp;amp;\texttt{let\%bind c = c\_monad in}\newline
+&amp;amp;\texttt{let\%map d = d\_monad in}\newline
+&amp;amp;\texttt{(a, b, c, d)}
+\end{align*}
+$$&lt;/p>
+&lt;p>Why is this the case?&lt;/p>
+&lt;ul>
+&lt;li>$\texttt{let\%bind}$ expects its function parameter to return a monad, which both $\texttt{let\%bind}$ and $\texttt{let\%map}$ do. This is why all except the last level must be $\texttt{let\%bind}$.&lt;/li>
+&lt;li>It is natural to perform computations without monads. Since this usually occurs after &amp;ldquo;unwrapping&amp;rdquo; all the monads, the last level is usually a $\texttt{let\%map}$.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>Note that if the last level were a $\texttt{let\%bind}$, we would have to return a monad.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let\%bind a = a\_monad in}\newline
+&amp;amp;\texttt{let\%bind b = b\_monad in}\newline
+&amp;amp;\texttt{let\%bind c = c\_monad in}\newline
+&amp;amp;\texttt{let\%bind d = d\_monad in}\newline
+&amp;amp;\texttt{return (a, b, c, d)}
+\end{align*}
+$$&lt;/p>
+&lt;/div>
+&lt;h2 id="examples">Examples&lt;/h2>
+&lt;h3 id="option">Option&lt;/h3>
+&lt;h4 id="definition-1">Definition&lt;/h4>
+&lt;p>Options give optionality to the existence of an underlying value.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{type &amp;lsquo;a Option =}\newline
+&amp;amp;\texttt{\quad | None}\newline
+&amp;amp;\texttt{\quad | Some of &amp;lsquo;a}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{let return a = Some a }\newline
+&amp;amp;\texttt{let bind a\_opt f =}\newline
+&amp;amp;\texttt{\qquad match a\_opt with}\newline
+&amp;amp;\texttt{\qquad \qquad None -&amp;gt; None}\newline
+&amp;amp;\texttt{\qquad \quad | Some a -&amp;gt; f a}
+\end{align*}
+$$&lt;/p>
+&lt;h4 id="use">Use&lt;/h4>
+&lt;p>Suppose we want to implement the $\texttt{option\_plus}$ function which operates on two parameters of type $\texttt{int Option}$.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let option\_plus (a\_opt : int Option) (b\_opt : int Option) : int Option =}\newline
+&amp;amp;\texttt{\qquad let\%bind a = a\_opt in}\newline
+&amp;amp;\texttt{\qquad let\%map b = b\_opt in}\newline
+&amp;amp;\texttt{\qquad a + b}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>This is much more elegant than &amp;ldquo;if-statement spamming&amp;rdquo; (or in OCaml, &amp;ldquo;pattern match spamming&amp;rdquo;).&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let option\_plus (a\_opt : int Option) (b\_opt : int Option) : int Option =}\newline
+&amp;amp;\texttt{\qquad match a\_opt with}\newline
+&amp;amp;\texttt{\qquad \qquad None -&amp;gt; None}\newline
+&amp;amp;\texttt{\qquad \quad | Some a -&amp;gt;}\newline
+&amp;amp;\texttt{\qquad \qquad (match b\_opt with}\newline
+&amp;amp;\texttt{\qquad \qquad \qquad None -&amp;gt; None}\newline
+&amp;amp;\texttt{\qquad \quad \qquad | Some b -&amp;gt; a + b)}
+\end{align*}
+$$&lt;/p>
+&lt;/div>
+&lt;h3 id="result">Result&lt;/h3>
+&lt;h4 id="definition-2">Definition&lt;/h4>
+&lt;p>Results allow values to have a fail condition. They are like options except we can tag the $\texttt{None}$ case with information (i.e. error information).&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{type (&amp;lsquo;a, &amp;lsquo;b) Result =}\newline
+&amp;amp;\texttt{\quad | Ok of &amp;lsquo;a}\newline
+&amp;amp;\texttt{\quad | Error of &amp;lsquo;b}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{let return a = Ok a }\newline
+&amp;amp;\texttt{let bind a\_res f =}\newline
+&amp;amp;\texttt{\qquad match a\_res with}\newline
+&amp;amp;\texttt{\qquad \qquad Ok a -&amp;gt; f a}\newline
+&amp;amp;\texttt{\qquad \quad | Error \_ as err -&amp;gt; err}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The $\texttt{Error \_ as err -&amp;gt; err}$ just assigns the entire result into $\texttt{err}$. Alternatively, we could have written $\texttt{Error e -&amp;gt; Error e}$.&lt;/p>
+&lt;/div>
+&lt;h4 id="use-1">Use&lt;/h4>
+&lt;p>Suppose we have a function $\texttt{input: unit -&amp;gt; string}$ which reads from $\texttt{stdin}$.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The $\texttt{unit}$ type has only one possible value: $\texttt{()}$. It is useful for when we want a function that requires zero arguments.&lt;/p>
+&lt;/div>
+&lt;p>Suppose we have a function which attempts to convert a $\texttt{string}$ to an $\texttt{int}$ and stores the error as a $\texttt{string}$.&lt;/p>
+&lt;p>$$\texttt{atoi: string -&amp;gt; (int, string) Result}$$&lt;/p>
+&lt;p>Now, let&amp;rsquo;s write a function to add two user inputs.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let add\_user\_inputs (() : unit) : (int, string) Result =}\newline
+&amp;amp;\texttt{\qquad let\%bind a = input () |&amp;gt; atoi in}\newline
+&amp;amp;\texttt{\qquad let\%map b = input () |&amp;gt; atoi in}\newline
+&amp;amp;\texttt{\qquad a + b}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\texttt{input () |&amp;gt; atoi}$ is syntactic sugar for $\texttt{atoi (input ())}$&lt;/p>
+&lt;/div>
+&lt;h3 id="deferred">Deferred&lt;/h3>
+&lt;h4 id="definition-3">Definition&lt;/h4>
+&lt;p>Deferreds allow us to make asynchronous computation. The implementation is a bit more involved, since the idea is computation is queued to a scheduler within a deferred monad. For this reason, &lt;em>the following code is pseudocode&lt;/em>.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{type &amp;lsquo;a Deferred =}\newline
+&amp;amp;\texttt{\quad | Determined of &amp;lsquo;a}\newline
+&amp;amp;\texttt{\quad | Undetermined}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{let return a = Determined a }\newline
+&amp;amp;\texttt{let bind a\_def f = &amp;hellip;}\newline
+&amp;amp;\texttt{(* f is queued on the scheduler. The return value of the bind}\newline
+&amp;amp;\texttt{ * (call it x) resolves immediately to undetermined. Upon f&amp;rsquo;s}\newline
+&amp;amp;\texttt{ * execution completion, x becomes a determined. Monadic chains}\newline
+&amp;amp;\texttt{ * (bind to bind to &amp;hellip; to bind to map) continue asynchronously}\newline
+&amp;amp;\texttt{ * on x.}\newline
+&amp;amp;\texttt{ *}\newline
+&amp;amp;\texttt{ * These deferred monadic chains are &amp;ldquo;upon&amp;rdquo; computations.}\newline
+&amp;amp;\texttt{ *)}\newline
+\end{align*}
+$$&lt;/p>
+&lt;h4 id="use-2">Use&lt;/h4>
+&lt;p>Suppose we have a function write a function to crawl a webpage and click all links and print visited urls. The function halts once it has reached a given depth (all links on the first page result have depth $1$; all of their links have depth $2$; etc).&lt;/p>
+&lt;p>Here are the functions we are given to use:&lt;/p>
+&lt;ul>
+&lt;li>$\texttt{print: string -&amp;gt; unit}$ outputs to $\texttt{stdout}$&lt;/li>
+&lt;li>$\texttt{curl: string -&amp;gt; string Deferred}$ queries the web for an html page given its web address&lt;/li>
+&lt;li>$\texttt{get\_links: string -&amp;gt; string List}$ grabs a list of all links on an html page&lt;/li>
+&lt;li>$\texttt{List.map: &amp;lsquo;a List -&amp;gt; (&amp;lsquo;a -&amp;gt; &amp;lsquo;b) -&amp;gt; &amp;lsquo;b List}$ takes a list of items and performs a computation on all of its elements&lt;/li>
+&lt;li>$\texttt{Deferred.all: &amp;lsquo;a Deferred List -&amp;gt; &amp;lsquo;a List Deferred}$ transforms a list of deferreds into a single deferred holding a list&lt;/li>
+&lt;/ul>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Notice the $\texttt{List.map}$. Indeed there exists a list monad! We will not be covering it.&lt;/p>
+&lt;/div>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let crawl (i : int) (url : string) : unit Deferred =}\newline
+&amp;amp;\texttt{\qquad let () = print url in}\newline
+&amp;amp;\texttt{\qquad if i = 0 then return () else}\newline
+&amp;amp;\texttt{\qquad let j = i - 1 in}\newline
+&amp;amp;\texttt{\qquad let\%bind html = curl url in}\newline
+&amp;amp;\texttt{\qquad let links = get\_links html in}\newline
+&amp;amp;\texttt{\qquad let crawls = List.map links (crawl j) in}\newline
+&amp;amp;\texttt{\qquad let\%map (\_ : unit List) = Deferred.all crawls in}\newline
+&amp;amp;\texttt{\qquad ()}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Note that $\texttt{crawl}$ is non-blocking. If we call it, it will immediately return a $\texttt{unit Deferred}$ and we can continue the program ($\texttt{crawl}$ is queued by the scheduler). If at any point, we want to block until $\texttt{crawl}$ completes, we can monadic bind on the $\texttt{unit Deferred}$ return value.&lt;/p>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let unit\_def = crawl 5 &amp;ldquo;https://www.wikipedia.org&amp;rdquo; in}\newline
+&amp;amp;\texttt{(* &amp;hellip; do some stuff &amp;hellip; *)}\newline
+&amp;amp;\texttt{let\%map () = unit\_def in ()}\newline
+\end{align*}
+$$&lt;/p>
+&lt;/div></description></item></channel></rss>

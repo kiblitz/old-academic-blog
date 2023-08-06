@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>access control on glee</title><link>https://kiblitz.github.io/tags/access-control/</link><description>Recent content in access control on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 16 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/access-control/index.xml" rel="self" type="application/rss+xml"/><item><title>Phantom Types</title><link>https://kiblitz.github.io/p/phantom-types/</link><pubDate>Sun, 16 Jul 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/phantom-types/</guid><description>&lt;img src="https://kiblitz.github.io/p/phantom-types/ghost.jpeg" alt="Featured image of post Phantom Types" />&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>As implied by the name, phantom types are defined by type parameters that are not actually used in implementation. Instead, they are used by the type system to restrict operations on that type. We can use them to improve program correctness (by the type checker).&lt;/p>
+&lt;h2 id="examples">Examples&lt;/h2>
+&lt;h3 id="units">Units&lt;/h3>
+&lt;p>Suppose we want to have a type for measurement units.&lt;/p>
+&lt;h4 id="definition">Definition&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{module Unit : sig}\newline
+&amp;amp;\texttt{\qquad type &amp;lsquo;a t}\newline
+&amp;amp;\texttt{\qquad val of\_float : float -&amp;gt; &amp;lsquo;a t}\newline
+&amp;amp;\texttt{\qquad val (+.) : &amp;lsquo;a t -&amp;gt; &amp;lsquo;a t -&amp;gt; &amp;lsquo;a t}\newline
+&amp;amp;\texttt{end = struct}\newline
+&amp;amp;\texttt{\qquad type &amp;lsquo;a t = float}\newline
+&amp;amp;\texttt{\qquad let of\_float x = x}\newline
+&amp;amp;\texttt{\qquad let (+.) = (+.)}\newline
+&amp;amp;\texttt{end}
+\end{align*}
+$$&lt;/p>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The module syntax is for defining stuff (in this case types and functions) in a context. So you would have to call $\texttt{of\_float}$ with $\texttt{Unit.of\_float}$.&lt;/p>
+&lt;p>$\texttt{sig}$ represents the module signature and $\texttt{struct}$ represents its actual definition (you can have multiple $\texttt{struct}$ definitions for a single $\texttt{sig}$).&lt;/p>
+&lt;/div>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\texttt{(+.)}$ is just an infix operator for float addition. Here, we define it for operations involving two values of type $\texttt{Unit}$.&lt;/p>
+&lt;/div>
+&lt;p>Notice how $\texttt{&amp;lsquo;a}$ is never actually used: its underlying type is just a $\texttt{float}$. However, notice that $\texttt{(+.)}$ has type $\texttt{&amp;lsquo;a t -&amp;gt; &amp;lsquo;a t -&amp;gt; &amp;lsquo;a t}$. This means that the two parameters we pass into $\texttt{(+.)}$ better have the same $\texttt{&amp;lsquo;a}$ type parameter. Similarly, it will return a value with that same $\texttt{&amp;lsquo;a}$.&lt;/p>
+&lt;h4 id="use">Use&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{type meters}\newline
+&amp;amp;\texttt{type lbs}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{open Unit}\newline
+&amp;amp;\texttt{let m1 : meters t = of\_float 2.}\newline
+&amp;amp;\texttt{let m2 : meters t = of\_float 4.}\newline
+&amp;amp;\texttt{let p1 : lbs t = of\_float 3.}\newline
+&amp;amp;\texttt{let p2 : lbs t = of\_float 5.}\newline
+&amp;amp;\texttt{let total\_m = m1 +. m2}\newline
+&amp;amp;\texttt{let total\_p = p1 +. p2}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\texttt{open Unit}$ just allows us to access $\texttt{Unit}$ things without prepending them.&lt;/p>
+&lt;/div>
+&lt;p>Notice how $\texttt{meter}$ and $\texttt{lbs}$ are never actually used outside of declaring types. This is how we can enforce that $\texttt{(+.)}$ operations can never be used on different units.&lt;/p>
+&lt;div class="box box-shortcode warning" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#warning-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>If you try to add units with different $\texttt{&amp;lsquo;a}$ parameter types, your program will fail to type check.&lt;/p>
+&lt;p>$$\cancel{\texttt{total\_m (+.) total\_p}}$$&lt;/p>
+&lt;p>Also, if you try to instantiate a variable with a phantom type without the explicit $\texttt{&amp;lsquo;a}$, your program will also fail to type check.&lt;/p>
+&lt;p>$$\cancel{\texttt{let x = of\_float 6.}}$$&lt;/p>
+&lt;/div>
+&lt;h3 id="access-control">Access Control&lt;/h3>
+&lt;p>This example was inspired by a &lt;a class="link" href="https://blog.janestreet.com/howto-static-access-control-using-phantom-types/" target="_blank" rel="noopener"
+>Ron Minsky post&lt;/a>.&lt;/p>
+&lt;p>Suppose we want to have a type for reference cells that have access control permissions (read and read/write).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Reference cells allow for mutable values by storing them as addresses containing the data.&lt;/p>
+&lt;ul>
+&lt;li>$\texttt{let x = ref 10}$ creates a reference cell $\texttt{x}$ storing the value $\texttt{10}$.&lt;/li>
+&lt;li>$\texttt{x := 4}$ sets the value in $\texttt{x}$ to $\texttt{4}$.&lt;/li>
+&lt;li>$\texttt{let v = !x}$ extracts the value in $\texttt{x}$ (so $\texttt{v = 4}$).&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;h4 id="definition-1">Definition&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{type read}\newline
+&amp;amp;\texttt{type write}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{module Ref : sig}\newline
+&amp;amp;\texttt{\qquad type (&amp;lsquo;a, &amp;lsquo;b) t}\newline
+&amp;amp;\texttt{\qquad create : &amp;lsquo;b -&amp;gt; (write, &amp;lsquo;b) t}\newline
+&amp;amp;\texttt{\qquad set : (write, &amp;lsquo;b) t -&amp;gt; &amp;lsquo;b -&amp;gt; unit}\newline
+&amp;amp;\texttt{\qquad get : (&amp;lsquo;a, &amp;lsquo;b) t -&amp;gt; &amp;lsquo;b}\newline
+&amp;amp;\texttt{\qquad readonly : (&amp;lsquo;a, &amp;lsquo;b) t -&amp;gt; (read, &amp;lsquo;b) t}\newline
+&amp;amp;\texttt{end = struct}\newline
+&amp;amp;\texttt{\qquad type (&amp;lsquo;a, &amp;lsquo;b) t = &amp;lsquo;b ref}\newline
+&amp;amp;\texttt{\qquad create x = ref x}\newline
+&amp;amp;\texttt{\qquad set t x = t := x}\newline
+&amp;amp;\texttt{\qquad get x = !x}\newline
+&amp;amp;\texttt{\qquad readonly x = x}\newline
+&amp;amp;\texttt{end}
+\end{align*}
+$$&lt;/p>
+&lt;p>$\texttt{&amp;lsquo;a}$ is discarded in the definition of $\texttt{Ref}$ (what makes it a phantom type). $\texttt{&amp;lsquo;b}$ just makes it polymorphic.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Polymorphic just means that the underlying type of the data within the cell can be anything. In the use example below, we will use $\texttt{&amp;lsquo;b = int}$.&lt;/p>
+&lt;/div>
+&lt;p>As shown, $\texttt{Ref}$ has $\texttt{&amp;lsquo;a = write}$ access upon creation, and you can only call $\texttt{set}$ on a $\texttt{Ref}$ which has $\texttt{&amp;lsquo;a = write}$. Additionally, you can cast any $\texttt{Ref}$ to have $\texttt{&amp;lsquo;a = read}$ using $\texttt{readonly}$ without actually changing any of its underlying data (just its $\texttt{&amp;lsquo;a}$ parameter type).&lt;/p>
+&lt;h4 id="use-1">Use&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{open Ref}\newline
+&amp;amp;\texttt{let write\_ref = create 10}\newline
+&amp;amp;\texttt{let read\_ref = readonly write\_ref}\newline
+&amp;amp;\texttt{let value1 = get write\_ref}\newline
+&amp;amp;\texttt{let () = set write\_ref 4}\newline
+&amp;amp;\texttt{let value2 = get read\_ref}
+\end{align*}
+$$&lt;/p>
+&lt;div class="box box-shortcode warning" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#warning-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>If you try to call $\texttt{set}$ on a $\texttt{Ref}$ with $\texttt{&amp;lsquo;a = readonly}$, your program will fail to type check.&lt;/p>
+&lt;p>$$\cancel{\texttt{set read\_ref 4}}$$&lt;/p>
+&lt;/div></description></item></channel></rss>

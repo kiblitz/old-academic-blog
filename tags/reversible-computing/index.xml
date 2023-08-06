@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>reversible computing on glee</title><link>https://kiblitz.github.io/tags/reversible-computing/</link><description>Recent content in reversible computing on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 12 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/reversible-computing/index.xml" rel="self" type="application/rss+xml"/><item><title>III. Garbage Qubit Disposal</title><link>https://kiblitz.github.io/p/garbage-qubit-disposal/</link><pubDate>Mon, 12 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/garbage-qubit-disposal/</guid><description>&lt;img src="https://kiblitz.github.io/p/garbage-qubit-disposal/mountain_contrast.jpg" alt="Featured image of post III. Garbage Qubit Disposal" />&lt;h2 id="motivation">Motivation&lt;/h2>
+&lt;h3 id="example">Example&lt;/h3>
+&lt;p>Suppose we had the following quantum code.&lt;/p>
+&lt;p>$\texttt{INIT}(A)\newline\texttt{HAD}(A)\newline\texttt{HAD}(A)$&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 448 185"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 64,48 L 80,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,48 L 128,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,64 L 48,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,16 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,64 L 144,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,144 L 48,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,144 L 144,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,80 L 80,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,80 L 176,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,48 A 16,16 0 0,0 48,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 A 16,16 0 0,1 80,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 A 16,16 0 0,0 112,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,48 A 16,16 0 0,1 144,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;circle cx='16' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='80' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='96' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='112' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='144' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='176' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='16' y='164' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='24' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='32' y='84' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='72' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='164' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='112' y='164' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='120' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='136' y='36' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='160' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='168' y='116' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='176' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='176' y='164' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>We can see that the amplitudes on the paths to value $1$ cancel out, leaving $A=0$ with probability $1$.&lt;/p>
+&lt;p>What happens when we throw a random qubit into the program?&lt;/p>
+&lt;h3 id="correctness-bug">Correctness Bug&lt;/h3>
+&lt;p>$\texttt{INIT}(A,B)\newline\texttt{HAD}(A)\newline\texttt{CNOT}(AB)\newline\texttt{HAD}(A)$&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 448 249"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 64,48 L 80,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,48 L 128,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,64 L 48,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,80 L 48,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,16 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,64 L 144,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,80 L 144,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,208 L 48,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,208 L 144,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,144 L 80,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,144 L 176,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,48 A 16,16 0 0,0 48,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 A 16,16 0 0,1 80,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 A 16,16 0 0,0 112,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,48 A 16,16 0 0,1 144,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;circle cx='16' cy='208' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='80' cy='208' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='96' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='112' cy='208' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='144' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='144' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='176' cy='208' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='8' y='228' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='16' y='228' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='24' y='84' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='24' y='148' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='24' y='180' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='32' y='84' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='32' y='148' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='40' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='72' y='180' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='72' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='228' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='112' y='228' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='120' y='180' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='120' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='136' y='36' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='152' y='116' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='160' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='160' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='168' y='84' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='168' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='168' y='180' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='176' y='180' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='176' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='184' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Now that $B$ has a value, amplitude cancellations don&amp;rsquo;t work anymore. We don&amp;rsquo;t modify $A$ at all with this change. Yet, $A=0$ and $A=1$ each have probability $0.5$.&lt;/p>
+&lt;p>This example is a bit contrived, but you can imagine that you might need to introduce extra temporary qubits and perform computations on them like you would temporary variables in classical computing. These types of qubits are called &lt;strong>garbage qubits&lt;/strong>.&lt;/p>
+&lt;h2 id="taking-out-the-trash">Taking Out the Trash&lt;/h2>
+&lt;p>So here&amp;rsquo;s the fix. Just set all the garbage qubits to $0$. That way all leaves have the same garbage qubit values and interference works as if they didn&amp;rsquo;t exist.&lt;/p>
+&lt;p>The catch? Remember that all quantum computation must be reversible. Assignment isn&amp;rsquo;t reversible. We can&amp;rsquo;t actually just set qubits to $0$.&lt;/p>
+&lt;h3 id="reversible-computation">Reversible Computation&lt;/h3>
+&lt;p>Instead, we can perform computations with our garbage qubits, use their outcomes, and then perform &lt;em>&lt;strong>reversed computations&lt;/strong>&lt;/em> on the garbage qubits.&lt;/p>
+&lt;h4 id="example-1">Example&lt;/h4>
+&lt;p>$\texttt{INIT}(A,B)\newline\texttt{HAD}(A)\newline\texttt{CNOT}(AB)\newline\boxed{\texttt{CNOT}(AB)}\newline\texttt{HAD}(A)$&lt;/p>
+&lt;p>Again, this example is a bit contrived. But the idea is still applicable. Once you are finished working with garbage qubits, you need to apply the inverse of the computations on those qubits so they can be reversed to $0$.&lt;/p>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Reversal example&lt;/p>
+&lt;p>$
+\texttt{CCNOT}(ABC)
+\newline\texttt{NOT}(A)
+\newline\texttt{CNOT}(AB)
+\newline\quad\newline
+\newline\texttt{CNOT}(AB)
+\newline\texttt{NOT}(A)
+\newline\texttt{CCNOT}(ABC)
+$&lt;/p>
+&lt;/div>
+&lt;h4 id="hadamard">Hadamard&lt;/h4>
+&lt;p>Recall that Hadamard performs the following mapping on qubit values.
+$$\begin{align*}0&amp;amp;\xmapsto{1}1\newline0&amp;amp;\xmapsto{1}0\end{align*}$$$$\begin{align*}1&amp;amp;\xmapsto{1}0\newline1&amp;amp;\xmapsto{-1}1\newline\end{align*}$$
+Notice that if we flip the arrows, the operation is the same. Thus, $\texttt{HAD}$ is its own reverse.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>This explains why executing $\texttt{HAD}$ twice has no effect&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Technically this reverse operation is called &lt;a class="link" href="https://en.wikipedia.org/wiki/Conjugate_transpose" target="_blank" rel="noopener"
+>dagger&lt;/a> (will be covered in a later post).&lt;/p>
+&lt;/div></description></item></channel></rss>

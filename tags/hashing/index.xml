@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hashing on glee</title><link>https://kiblitz.github.io/tags/hashing/</link><description>Recent content in hashing on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 22 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/hashing/index.xml" rel="self" type="application/rss+xml"/><item><title>V. Universal and Perfect Hashing</title><link>https://kiblitz.github.io/p/451-universal-and-perfect-hashing/</link><pubDate>Thu, 22 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/451-universal-and-perfect-hashing/</guid><description>&lt;img src="https://kiblitz.github.io/p/451-universal-and-perfect-hashing/waterfall_bridge_cave.jpg" alt="Featured image of post V. Universal and Perfect Hashing" />&lt;h2 id="motivation">Motivation&lt;/h2>
+&lt;p>A prevalent usecase of hashing is in storing sets or mappings for a subset of the input space &amp;mdash; hash tables. An optimal hash table uniformly distributes elements among its buckets.&lt;/p>
+&lt;h2 id="universal-hashing">Universal Hashing&lt;/h2>
+&lt;h3 id="definition">Definition&lt;/h3>
+&lt;blockquote>
+&lt;p>A randomized algorithm $H$ for constructing hash functions $h:U\rightarrow\lbrace 0,1,&amp;hellip;,M-1\rbrace$ is &lt;em>&lt;strong>universal&lt;/strong>&lt;/em> if $\forall x \neq y \text{ s.t. } x, y\in U$, we have $$\mathbb{P} [h(x)=h(y)|\thinspace h \leftarrow H]\leq\frac{1}{M}$$&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="construction">Construction&lt;/h3>
+&lt;h4 id="random-matrix">Random Matrix&lt;/h4>
+&lt;p>Suppose keys are $u$-bits long and $M=2^m$. Define $A$ to be a $m$-by-$u$ matrix filled with $0$ and $1$ randomly.&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 384 217"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 24,0 L 96,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,0 L 200,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 24,32 L 200,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,32 L 240,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,32 L 288,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 24,128 L 200,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,128 L 288,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,192 L 240,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,32 L 0,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,96 L 0,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 24,32 L 24,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 200,32 L 200,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,32 L 224,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,32 L 240,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,32 L 272,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,32 L 288,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='8.000000,32.000000 -4.000000,26.400000 -4.000000,37.599998' fill='currentColor' transform='rotate(270.000000, 0.000000, 32.000000)'>&lt;/polygon>
+&lt;polygon points='8.000000,128.000000 -4.000000,122.400002 -4.000000,133.600006' fill='currentColor' transform='rotate(90.000000, 0.000000, 128.000000)'>&lt;/polygon>
+&lt;polygon points='32.000000,0.000000 20.000000,-5.600000 20.000000,5.600000' fill='currentColor' transform='rotate(180.000000, 24.000000, 0.000000)'>&lt;/polygon>
+&lt;polygon points='208.000000,0.000000 196.000000,-5.600000 196.000000,5.600000' fill='currentColor' transform='rotate(0.000000, 200.000000, 0.000000)'>&lt;/polygon>
+&lt;text text-anchor='middle' x='0' y='84' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='112' y='84' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='232' y='116' fill='currentColor' style='font-size:1em'>x&lt;/text>
+&lt;text text-anchor='middle' x='256' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='304' y='84' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='312' y='84' fill='currentColor' style='font-size:1em'>(&lt;/text>
+&lt;text text-anchor='middle' x='320' y='84' fill='currentColor' style='font-size:1em'>x&lt;/text>
+&lt;text text-anchor='middle' x='328' y='84' fill='currentColor' style='font-size:1em'>)&lt;/text>
+&lt;text text-anchor='middle' x='344' y='84' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='360' y='84' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='368' y='84' fill='currentColor' style='font-size:1em'>x&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Claim&lt;/strong>&lt;/dt>
+&lt;dd>$H=\lbrace h\rbrace$ is universal&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider an arbitrary pair of distinct keys $x, y$. Suppose they differ in the $i$th bit. WLOG, $x_i=0$ and $y_i=1$.&lt;/dd>
+&lt;dd>
+&lt;p>Observe that regardless of the elements in the $i$th column of $A$, $h(x)=Ax$ since $x_i=0$.&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>However, each of the $2^m$ possibilities for the $i$th column of $A$ yield distinct $h(y)=Ay$.
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>A bit flip in the $i$th column of $A$ at row $j$ flips $Ay$ at the $j$th bit&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>$$\mathbb{P} [Ax=Ay]=\frac{1}{2^m}$$&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>This is unfortunately quite space inefficient.&lt;/p>
+&lt;h4 id="random-vector">Random Vector&lt;/h4>
+&lt;p>View the key $x$ as a vector of integers $\langle x_1, x_2, &amp;hellip;, x_k \rangle$ where $0\leq x_i &amp;lt; M$ and $M$ is prime.&lt;/p>
+&lt;p>Define a $k$-length vector $r_1, r_2, &amp;hellip;, r_k$ filled with random values where $0\leq r_i &amp;lt; M$.&lt;/p>
+&lt;p>$$h(x)=r\cdot x\mod M$$&lt;/p>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Claim&lt;/strong>&lt;/dt>
+&lt;dd>$H=\lbrace h\rbrace$ is universal&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider an arbitrary pair of distinct keys $x, y$. Suppose they differ in the $i$th number $x_i \neq y_i$.&lt;/dd>
+&lt;dd>
+&lt;p>Consider the dot product defined by $h$ excluding the $i$th expression. Specifically,&lt;/p>
+&lt;/dd>
+&lt;dd>$$h&amp;rsquo;(x)=\sum_{j\neq i}r_jx_j$$
+Thus,&lt;/dd>
+&lt;dd>$$h(x)=h&amp;rsquo;(x)+r_ix_i$$
+Collision between $x, y$ occurs precisely when $h&amp;rsquo;(x) + r_ix_i = h&amp;rsquo;(y) + r_iy_i\mod M$.&lt;/dd>
+&lt;dd>$$r_i(x_i-y_i)=h&amp;rsquo;(y)-h&amp;rsquo;(x)\mod M$$&lt;/dd>
+&lt;dd>Note that because of $M$&amp;rsquo;s primality, every integer has a multiplicative inverse. Thus, $r_i$ is unique.&lt;/dd>
+&lt;dd>$$\mathbb{P} [h(x)=h(y)]=\frac{1}{M}$$&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h2 id="perfect-hashing">Perfect Hashing&lt;/h2>
+&lt;h3 id="definition-1">Definition&lt;/h3>
+&lt;blockquote>
+&lt;p>A hash function is &lt;em>&lt;strong>perfect&lt;/strong>&lt;/em> for a set $S, |S|=N$ if all lookups involve $\mathcal{O}(1)$ work.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="construction-1">Construction&lt;/h3>
+&lt;h4 id="try-1-----quadratic-space">Try 1 &amp;mdash; Quadratic Space&lt;/h4>
+&lt;p>Let $H$ be universal and $M=N^2$.&lt;/p>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Claim&lt;/strong>&lt;/dt>
+&lt;dd>$\mathbb{P}[\exists\text{ collision in $S$}]&amp;lt; \frac{1}{2}$&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>There are $N\choose 2$ pairs $(x, y)$ in $S$. Each pair has at most $\frac{1}{M}=\frac{1}{N^2}$ collision probability by definition of universality.&lt;/dd>
+&lt;dd>$\mathbb{P}[\exists\text{ collision in $S$}]\leq \frac{N \choose 2}{N^2}&amp;lt;\frac{1}{2}$&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h4 id="try-2-----linear-space">Try 2 &amp;mdash; Linear Space&lt;/h4>
+&lt;p>Let $H$ be universal and $M=N$. Hash into the first layer with $N$ buckets. Each bucket maps to a secondary layer each with $C_i^2$ slots, where $C_i$ represents the number of elements that collide in the $i$th bucket of the first layer.&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 528 393"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 0,0 L 240,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,0 L 512,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,32 L 64,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 128,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,32 L 192,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,32 L 256,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,32 L 320,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,32 L 384,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,32 L 448,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,32 L 512,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,96 L 32,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,96 L 64,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,96 L 96,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,96 L 128,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,96 L 160,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,96 L 192,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,96 L 224,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,96 L 256,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,96 L 320,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,96 L 352,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,96 L 384,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,96 L 416,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,96 L 448,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,96 L 480,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,96 L 512,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,112 L 336,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,128 L 144,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,128 L 256,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,128 L 384,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,144 L 512,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 L 96,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,176 L 192,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,176 L 256,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,176 L 320,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,176 L 384,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,208 L 512,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,224 L 96,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,240 L 192,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,240 L 256,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,240 L 320,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,240 L 384,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,256 L 400,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,256 L 512,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,272 L 96,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,272 L 160,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,272 L 224,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,272 L 288,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,288 L 440,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,304 L 24,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 344,304 L 408,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,320 L 512,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,336 L 96,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,336 L 160,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,336 L 224,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,336 L 288,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 344,368 L 408,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,32 L 0,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,160 L 0,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,64 L 32,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,96 L 32,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 L 32,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,272 L 32,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 64,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,128 L 64,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,64 L 96,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,160 L 96,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,272 L 96,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,144 L 112,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,32 L 128,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,176 L 128,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,64 L 160,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,96 L 160,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,272 L 160,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,32 L 192,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,176 L 192,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,64 L 224,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,96 L 224,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,272 L 224,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,32 L 256,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,128 L 256,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,160 L 256,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,176 L 256,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,272 L 288,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,32 L 320,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,176 L 320,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 344,304 L 344,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,64 L 352,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 376,272 L 376,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,32 L 384,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,176 L 384,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,144 L 400,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,256 L 400,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,304 L 408,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,64 L 416,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,96 L 416,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,32 L 448,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,144 L 448,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,256 L 448,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,64 L 480,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,96 L 480,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 512,32 L 512,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 512,144 L 512,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 512,256 L 512,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='8.000000,0.000000 -4.000000,-5.600000 -4.000000,5.600000' fill='currentColor' transform='rotate(180.000000, 0.000000, 0.000000)'>&lt;/polygon>
+&lt;polygon points='32.000000,304.000000 20.000000,298.399994 20.000000,309.600006' fill='currentColor' transform='rotate(0.000000, 24.000000, 304.000000)'>&lt;/polygon>
+&lt;path d='M 64,144 L 64,152' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='80.000000,144.000000 68.000000,138.399994 68.000000,149.600006' fill='currentColor' transform='rotate(90.000000, 64.000000, 144.000000)'>&lt;/polygon>
+&lt;path d='M 112,256 L 112,264' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='128.000000,256.000000 116.000000,250.399994 116.000000,261.600006' fill='currentColor' transform='rotate(90.000000, 112.000000, 256.000000)'>&lt;/polygon>
+&lt;path d='M 256,160 L 256,168' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='272.000000,160.000000 260.000000,154.399994 260.000000,165.600006' fill='currentColor' transform='rotate(90.000000, 256.000000, 160.000000)'>&lt;/polygon>
+&lt;path d='M 376,288 L 376,296' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='392.000000,288.000000 380.000000,282.399994 380.000000,293.600006' fill='currentColor' transform='rotate(90.000000, 376.000000, 288.000000)'>&lt;/polygon>
+&lt;polygon points='448.000000,288.000000 436.000000,282.399994 436.000000,293.600006' fill='currentColor' transform='rotate(0.000000, 440.000000, 288.000000)'>&lt;/polygon>
+&lt;path d='M 480,128 L 480,136' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='496.000000,128.000000 484.000000,122.400002 484.000000,133.600006' fill='currentColor' transform='rotate(90.000000, 480.000000, 128.000000)'>&lt;/polygon>
+&lt;polygon points='520.000000,0.000000 508.000000,-5.600000 508.000000,5.600000' fill='currentColor' transform='rotate(0.000000, 512.000000, 0.000000)'>&lt;/polygon>
+&lt;path d='M 80,112 A 16,16 0 0,0 64,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,96 A 16,16 0 0,1 80,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,112 A 16,16 0 0,0 256,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,96 A 16,16 0 0,1 336,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,128 A 16,16 0 0,0 112,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,112 A 16,16 0 0,1 144,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,112 A 16,16 0 0,0 240,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,128 A 16,16 0 0,1 400,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,144 A 16,16 0 0,0 0,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,128 A 16,16 0 0,1 16,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,256 A 16,16 0 0,0 376,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,240 A 16,16 0 0,1 400,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,272 A 16,16 0 0,0 416,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,288 A 16,16 0 0,0 16,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;circle cx='32' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='96' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='224' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='288' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='352' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='416' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='480' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>N&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>$\mathbb{P}[\sum_iC_i^2 &amp;gt; 4N]&amp;lt;\frac{1}{2}$&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Let $I_{xy}$ be an indicator that $x,y$ collide. Observe that within any secondary layer with $C_i$ elements ($C_i^2$ slots), for any two elements $x, y$, $I_{xy}=1$ (including $I_{xx}$, this amounts to $C_i^2$).&lt;/dd>
+&lt;dd>$$\begin{align*}\mathbb{E}[\sum_iC_i^2]&amp;amp;=\mathbb{E}[\sum_x\sum_yI_{xy}]\newline&amp;amp;=N+\sum_x\sum_{y\neq x}\mathbb{E}[C_{xy}]\newline&amp;amp;\leq N+\frac{N(N-1)}{M}\newline&amp;amp;=N+\frac{N(N-1)}{N}\newline&amp;amp;&amp;lt;2N\end{align*}$$&lt;/dd>
+&lt;dd>By &lt;a class="link" href="https://en.wikipedia.org/wiki/Markov%27s_inequality" target="_blank" rel="noopener"
+>Markov&amp;rsquo;s Inequality&lt;/a>, the problem statement is proven.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$\mathbb{P}[X\geq a]\leq\frac{\mathbb{E}[X]}{a}$$&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote></description></item></channel></rss>

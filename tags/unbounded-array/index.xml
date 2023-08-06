@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>unbounded array on glee</title><link>https://kiblitz.github.io/tags/unbounded-array/</link><description>Recent content in unbounded array on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 15 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/unbounded-array/index.xml" rel="self" type="application/rss+xml"/><item><title>III. Amortized Analysis</title><link>https://kiblitz.github.io/p/451-amortized-analysis/</link><pubDate>Thu, 15 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/451-amortized-analysis/</guid><description>&lt;img src="https://kiblitz.github.io/p/451-amortized-analysis/waterfall_forest_pool.jpg" alt="Featured image of post III. Amortized Analysis" />&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;h3 id="motivation">Motivation&lt;/h3>
+&lt;p>Analyzing an algorithm&amp;rsquo;s worst-case time complexity can be too pessimistic. Perhaps an algorithm $\mathcal{A}$ is usually cheap, but every $n$ executions, it is expensive. Should $\mathcal{A}$ be categorized as an expensive algorithm?&lt;/p>
+&lt;h3 id="definition">Definition&lt;/h3>
+&lt;p>The amortized time cost for $\mathcal{A}$ is the average time cost per execution across &lt;strong>any&lt;/strong> sequence of executions of length $n$ for some determined $n$.&lt;/p>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$n=1$ is worst-case analysis, but larger $n$ can offer more optimistic analysis&lt;/p>
+&lt;/div>
+&lt;h2 id="examples">Examples&lt;/h2>
+&lt;h3 id="binary-counter">Binary Counter&lt;/h3>
+&lt;h4 id="problem">Problem&lt;/h4>
+&lt;blockquote>
+&lt;p>We want to store a big binary counter in an array $A$ initialized to $0$.
+The cost model is every bit flip.&lt;/p>
+&lt;/blockquote>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$
+\begin {array}{ccccc|c}
+\underline{A_4}\quad &amp;amp; \underline{A_3}\quad &amp;amp; \underline{A_2}\quad &amp;amp; \underline{A_1}\quad &amp;amp; \underline{A_0}\quad &amp;amp; \quad\underline{\textbf{cost}} \newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad2\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad3\newline
+0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad2\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad4\newline
+0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 1\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp;
+\end {array}$$&lt;/p>
+&lt;/div>
+&lt;p>The worst-case time complexity is $\mathcal{O}(\log n)$ since at worst $n$ becomes a power of $2$, and we have to flip all of its significant bits.&lt;/p>
+&lt;h4 id="amortized-analysis">Amortized Analysis&lt;/h4>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>The amortized time cost is at most $2$.&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider $n$ (for large $n$) executions beginning at any state. $A_0$ flips every execution. $A_1$ flips every other execution. $A_2$ flips every 4 executions. $A_k$ flips every $2^k$ executions.&lt;/dd>
+&lt;dd>
+&lt;p>The total cost is the sum of these flips.&lt;/p>
+&lt;/dd>
+&lt;dd>$$n + \frac{n}{2} + \frac{n}{4} + &amp;hellip; \leq 2n$$&lt;/dd>
+&lt;dd>Thus, the average per execution is at most $2\in\mathcal{O}(1)$.
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The &amp;ldquo;beginning at any state&amp;rdquo; is important. Otherwise, our analysis is not generalizable.&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h3 id="expensive-binary-counter">Expensive Binary Counter&lt;/h3>
+&lt;h4 id="problem-1">Problem&lt;/h4>
+&lt;blockquote>
+&lt;p>We want to store a big binary counter in an array $A$ initialized to $0$.
+It costs $2^k$ to flip bit $A_k$.&lt;/p>
+&lt;/blockquote>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Same problem but with exponential costs&lt;/p>
+&lt;/div>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$
+\begin {array}{ccccc|c}
+\underline{A_4}\quad &amp;amp; \underline{A_3}\quad &amp;amp; \underline{A_2}\quad &amp;amp; \underline{A_1}\quad &amp;amp; \underline{A_0}\quad &amp;amp; \quad\underline{\textbf{cost}} \newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad3\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad7\newline
+0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad3\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 0\quad &amp;amp; 1\quad &amp;amp; 1\quad &amp;amp; \boxed{1}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad15\newline
+0\quad &amp;amp; \boxed{1}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \boxed{0}\quad &amp;amp; \newline
+&amp;amp; &amp;amp; &amp;amp; &amp;amp; &amp;amp; \quad1\newline
+0\quad &amp;amp; 1\quad &amp;amp; 0\quad &amp;amp; 0\quad &amp;amp; \boxed{1}\quad &amp;amp;
+\end {array}$$&lt;/p>
+&lt;/div>
+&lt;p>The worst-case time complexity is $\mathcal{O}(n)$ since at worst $n$ becomes a power of $2$, and we have to flip all of its significant bits ($1+2+4+&amp;hellip;+\frac{n}{2}+n\leq2n$).&lt;/p>
+&lt;h4 id="amortized-analysis-1">Amortized Analysis&lt;/h4>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>The amortized time cost is at most $\log_2 (n) + 1$.&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider $n$ (for large $n$) executions beginning at any state. $A_0$ flips every execution for a cost of $1$. $A_1$ flips every other execution for a cost of $2$. $A_2$ flips every 4 executions for a cost of $4$. $A_k$ flips every $2^k$ executions for a cost of $2^k$.&lt;/dd>
+&lt;dd>
+&lt;p>$n$ has $\lfloor\log_2 n + 1\rfloor$ significant bits.&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>The total cost is the sum of these flips.&lt;/p>
+&lt;/dd>
+&lt;dd>$$\underbrace{n + 2\cdot\frac{n}{2} + 4\cdot\frac{n}{4} + &amp;hellip;}_{\lfloor\log_2 n + 1\rfloor} = n\lfloor\log_2 n + 1\rfloor$$&lt;/dd>
+&lt;dd>Thus, the average per execution is $\lfloor\log_2 n + 1\rfloor\in\mathcal{O}(\log n)$.&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h3 id="unbounded-array">Unbounded Array&lt;/h3>
+&lt;h4 id="problem-2">Problem&lt;/h4>
+&lt;blockquote>
+&lt;p>We want to store a linear stream of data. We start with an Array $\mathcal{A}$ of memory space of size $1$. Every new append inserts into $\mathcal{A}$. If an append is attempted when $\mathcal{A}$ is completely filled, we must reallocate memory at double the size and re-insert previous data before inserting the new data.&lt;/p>
+&lt;p>It costs $1$ to insert one slot of data.&lt;/p>
+&lt;/blockquote>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$
+\begin {array}{c|c}
+\underline{A} &amp;amp; \underline{\textbf{cost}} \newline
+\Box&amp;amp;\newline
+&amp;amp;1\newline
+\blacksquare&amp;amp;\newline
+&amp;amp;2\newline
+\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;3\newline
+\Box\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;1\newline
+\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;5\newline
+\Box\Box\Box\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;1\newline
+\Box\Box\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;1\newline
+\Box\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;1\newline
+\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+&amp;amp;9\newline
+\Box\Box\Box\Box\Box\Box\Box\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare\blacksquare&amp;amp;\newline
+\end {array}$$&lt;/p>
+&lt;/div>
+&lt;p>The worst-case time complexity is $\mathcal{O}(n)$ with respect to the data size since at worst, we are in a reallocation step where we must re-insert all old data.&lt;/p>
+&lt;h4 id="amortized-analysis-2">Amortized Analysis&lt;/h4>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>The amortized time cost is at most $3$.&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider $n$ (for large $n$) executions beginning at any state. Without including the cost of inserting old data, every append costs exactly $1$. In total, this has cost $n$.&lt;/dd>
+&lt;dd>
+&lt;p>Inserting old data costs the size of the old array. In total, this costs at most $n + \frac{n}{2} + &amp;hellip; \leq 2n$.&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>Thus, the total cost is at most $n+2n=3n$ and the average cost per execution is $3$.&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h2 id="potentials">Potentials&lt;/h2>
+&lt;p>Potentials offer a more rigorous approach to amortized analysis. What we&amp;rsquo;ve been doing is still entirely correct, but might be problematically difficult with more complex algorithms.&lt;/p>
+&lt;h3 id="intuition-bankers-method">Intuition: Banker&amp;rsquo;s Method&lt;/h3>
+&lt;p>The intuitive way to think about potentials is with a bank. Every time $\mathcal{A}$ is executed, we earn some amount of coins $k(S)$ (function on data-structure state). If the current $\mathcal{A}$ operation is cheap, we can split our earnings between this operation and saving it in the bank. If the current $\mathcal{A}$ operation is expensive, we can use our funds from the bank to support it.&lt;/p>
+&lt;p>$k(S)$ is an amoritized time bound on $\mathcal{A}$ if we will always have enough coins to pay for an operation at any given time.&lt;/p>
+&lt;h3 id="definition-1">Definition&lt;/h3>
+&lt;p>The potential function $\Phi$ is a function mapping data-structure states to $\reals$. It represents the &amp;ldquo;potential&amp;rdquo; of that state (the coin cost).&lt;/p>
+&lt;p>Let $ac_i$ represent the amortized cost over $i$ algorithm executions. Let $c_i$ be the cost of the $i$th execution, and let $S_i$ being the resulting state.&lt;/p>
+&lt;p>$$ac_i = c_i + \Phi(S_i)-\Phi(S_{i-1})$$
+Analogically, $\text{amortized cost}=\text{actual cost}+\text{change in potential}$.&lt;/p>
+&lt;p>$$\begin{align*}\sum_iac_i&amp;amp;=\sum_i(c_i+\Phi(S_i)-\Phi(S_{i-1}))\newline&amp;amp;=\sum_ic_i+\Phi(S_n)-\Phi(S_0)\end{align*}$$&lt;/p>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Observe that if $\Phi(S_n)\geq\Phi(S_0)$ (which is frequently the case): $$\sum_ic_i\leq\sum_iac_i$$&lt;/p>
+&lt;p>Note that $\Phi(S)$ can be defined in any way, but unless $\Phi(S_0)-\Phi(S_n)$ is appropriately bounded (as in above), our determined $ac$ has no meaning.&lt;/p>
+&lt;/div>
+&lt;h2 id="revisiting-binary-counter">Revisiting Binary Counter&lt;/h2>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>The amortized time cost is at most $2$.&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Let $\Phi(S)=1\text{s in }S$.&lt;/dd>
+&lt;dd>
+&lt;p>Consider the $i$th execution $i-1\rightarrow i$. Let $k$ be the number of carries that occur.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>In $10100\rightarrow 10101$, $\thickspace k=0$&lt;/p>
+&lt;p>In $10111\rightarrow 11000$, $\thickspace k=3$&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>$\Phi(S_i)-\Phi(S_{i-1})=-k+1$ since $k$ $1$s become $0$ and one $0$ becomes a $1$.&lt;/dd>
+&lt;dd>
+&lt;p>For the same reason, $c_i=k+1$.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>In $10100\rightarrow 10101$&lt;/p>
+&lt;ul>
+&lt;li>costs $1$&lt;/li>
+&lt;li>changes potential from $2\rightarrow 3$&lt;/li>
+&lt;/ul>
+&lt;p>In $10111\rightarrow 11000$, $\thickspace k=3$&lt;/p>
+&lt;ul>
+&lt;li>costs $4$&lt;/li>
+&lt;li>changes potential from $4\rightarrow 2$&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>Thus, $ac_i=(k+1)+(-k+1)=2$.&lt;/dd>
+&lt;dd>
+&lt;p>Since $\Phi(S_n)\geq\Phi(S_0)\thickspace\forall n$,&lt;/p>
+&lt;/dd>
+&lt;dd>$$\sum_ic_i\leq\sum_iac_i$$&lt;/dd>
+&lt;/dl>
+&lt;/blockquote></description></item></channel></rss>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>adversarial argument on glee</title><link>https://kiblitz.github.io/tags/adversarial-argument/</link><description>Recent content in adversarial argument on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 09 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/adversarial-argument/index.xml" rel="self" type="application/rss+xml"/><item><title>II. Bounding Problems</title><link>https://kiblitz.github.io/p/bounding-problems/</link><pubDate>Fri, 09 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/bounding-problems/</guid><description>&lt;img src="https://kiblitz.github.io/p/bounding-problems/waterfall_rock.jpg" alt="Featured image of post II. Bounding Problems" />&lt;h2 id="sorting">Sorting&lt;/h2>
+&lt;h3 id="lower-bound-info-theory-argument">Lower Bound (Info Theory Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>&lt;em>&lt;strong>Any&lt;/strong>&lt;/em> deterministic sorting algorithm on an array of length $n$ must make at least $\log_2(n!)$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Observe that sorting is just a permutation on the input array. In total, there are $n!$ permutations. In the worst case, only one permutation corresponds to a sorted array.
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>This is when all elements in the array are unique&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;dd>Observe that each comparison ($a {_?\atop &amp;gt;} b$) partitions the solution space into two: permutations that are still possibly correct and permutations that are not.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Suppose we have $[3, 1, 2]$. At the start of the algorithm (without having made any comparisons), all permutations could potentially be correct (sorted). However, once we make the comparison between $3 {?\atop &amp;gt;} 1 \Rightarrow 1 &amp;lt; 3$, every permutation where $3$ comes before $1$ is known to be incorrect.&lt;/p>
+&lt;p>$$\cancel{[3,1,2]}\newline\cancel{[3,2,1]}\newline[2,1,3]\newline\cancel{[2,3,1]}\newline[1,3,2]\newline[1,2,3]$$&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;dd>Since in the worst case, the algorithm will mark the smaller partition as incorrect, it must be the case that each comparison shrinks the solution space by at most half. So in the worst case, it takes $\log_2(n!)$ comparisons.&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>This is an &lt;a class="link" href="https://en.wikipedia.org/wiki/Information_theory" target="_blank" rel="noopener"
+>information theoretic&lt;/a> argument since the proof is explaining that any algorithm requires $\log_2 n$ bits of information.&lt;/p>
+&lt;h2 id="upper-bound">Upper Bound&lt;/h2>
+&lt;blockquote>
+&lt;p>$\texttt{MergeSort}(A)$&lt;/p>
+&lt;ul>
+&lt;li>Split $A$ into two contiguous subarrays $L,R$ with (approximately) equal number of elements&lt;/li>
+&lt;li>$L&amp;rsquo;=\texttt{MergeSort}(L)$, $R&amp;rsquo;=\texttt{MergeSort}(R)$&lt;/li>
+&lt;li>Merge sorted $L&amp;rsquo;$ and $R&amp;rsquo;$ to create sorted $A&amp;rsquo;$
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>You can inductively reason that $L&amp;rsquo;$ and $R&amp;rsquo;$ are sorted.&lt;/p>
+&lt;/div>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The merging is done linearly using two pointers on $L&amp;rsquo;$ and $R&amp;rsquo;$ and appending the lesser of the two values to $A&amp;rsquo;$ while incrementing that pointer (this is possible because $L&amp;rsquo;$ and $R&amp;rsquo;$ are both sorted)&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>The only comparisons done in $\texttt{MergeSort}$ are in the last step. Every comparison increments at least one pointer, which can happen at most $n-1$ times (See &lt;a class="link" href="https://www.geeksforgeeks.org/merge-two-sorted-arrays/" target="_blank" rel="noopener"
+>this&lt;/a> for a more thorough explanation on the last step).&lt;/p>
+&lt;p>Unrolling the recurrence:
+$$\begin{align*}&amp;amp;\thickspace\underbrace{(n-1)+2(\frac{n}{2}-1)+4(\frac{n}{4}-1)+&amp;hellip;}_{\log_2(n)}\newline=&amp;amp;\thickspace (n-1) + (n-2) + (n-4) + &amp;hellip; \newline=&amp;amp;\thickspace n\log_2 n - (n - 1) \newline &amp;lt;&amp;amp; \thickspace n\log_2 n\newline\in&amp;amp;\thickspace \mathcal{O}(n\log n)\end{align*}$$&lt;/p>
+&lt;p>Since $\log_2(n!)\in\Omega(n \log n)$, the bound is tight.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$\begin{align*}\log_2 (n!) &amp;amp;= \log_2(n) + \log_2(n - 1) + \log_2(n - 2) + &amp;hellip; + \log_2(1) \newline &amp;amp;&amp;gt; \frac{n}{2}\log_2 (\frac{n}{2}) \newline &amp;amp;= \Omega(n \log n) \end{align*}$$&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;h2 id="maximum-element">Maximum Element&lt;/h2>
+&lt;h3 id="upper-bound-1">Upper Bound&lt;/h3>
+&lt;p>Scanning the array from left to right while keeping track of the largest seen element requires $n-1$ comparisons.&lt;/p>
+&lt;h3 id="lower-bound">Lower Bound&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic maximum element algorithm must make at least $n - 1$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>AFSOC there exists an algorithm $\mathcal{A}$ which makes less than $n-1$ comparisons. Construct a graph with $n$ vertices for each array element. For every comparison $\mathcal{A}$ makes between two elements, append an edge to the graph between the corresponding vertices. Since there are less than $n-1$ edges, there must be at least two islands.&lt;/dd>
+&lt;dd>
+&lt;p>If $\mathcal{A}$ selects an element $e$ in an island, consider the same input array except all corresponding elements on every other island are incremented by $e$. The observations $\mathcal{A}$ makes are the same since the comparisons known are only within an island, yet clearly $e$ cannot be the maximum element.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Suppose our array is $[1, 2, 3, 4, 5, 6, 7]$ labelled $[a, b, c, d, e, f, g]$ and $\mathcal{A}$ makes the following ($n-2=5$) comparisons:
+$$
+a_{(1)}&amp;lt;c_{(3)}\newline
+c_{(3)}&amp;lt;g_{(7)}\newline
+g_{(7)}&amp;gt;d_{(4)}\newline
+\text{}\newline
+b_{(2)}&amp;lt;f_{(6)}\newline
+f_{(6)}&amp;gt;e_{(5)}\newline
+$$&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 392 217"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 64,32 L 80,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,32 L 352,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,64 L 80,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,64 L 352,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,192 L 48,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,192 L 320,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 64,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,32 L 80,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,32 L 336,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,32 L 352,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,48 L 32,16' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 L 48,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,192 L 32,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,48 L 304,16' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,80 L 320,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,192 L 304,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,176 L 376,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 L 48,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,48 L 32,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,16 L 48,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,160 L 320,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,48 L 304,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,16 L 320,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='372.000000,176.000000 360.000000,170.399994 360.000000,181.600006' fill='currentColor' transform='rotate(120.000000, 360.000000, 176.000000)'>&lt;/polygon>
+&lt;circle cx='16' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='16' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='160' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='288' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='288' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='160' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='320' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='320' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='0' y='52' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='0' y='196' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='32' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='32' y='148' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='64' y='196' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='72' y='52' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='136' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='144' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='152' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='160' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='168' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='176' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='184' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='192' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='200' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='208' y='100' fill='currentColor' style='font-size:1em'>&amp;gt;&lt;/text>
+&lt;text text-anchor='middle' x='272' y='52' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='272' y='196' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='296' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='304' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='304' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='304' y='148' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='336' y='196' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='52' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='344' y='196' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Now look at the comparisons after the incremental modification to $[1, 9, 3, 4, 5, 12, 13]$ labelled $[a, b, c, d, e, f, g]$:
+$$
+a_{(1)}&amp;lt;c_{(3)}\newline
+c_{(3)}&amp;lt;g_{(7)}\newline
+g_{(7)}&amp;gt;d_{(4)}\newline
+\text{}\newline
+b_{(9)}&amp;lt;f_{(13)}\newline
+f_{(13)}&amp;gt;e_{(12)}\newline
+$$
+The comparisons are still true yet $\mathcal{A}$&amp;rsquo;s original output is incorrect!&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h2 id="second-largest-element">Second Largest Element&lt;/h2>
+&lt;h3 id="upper-bound-2">Upper Bound&lt;/h3>
+&lt;p>Find the maximum element with a &amp;ldquo;playoffs&amp;rdquo; structure ($n-1$ comparisons).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 464 217"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 48,96 L 80,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,96 L 144,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,96 L 336,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,96 L 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,160 L 208,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,160 L 336,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,16 A 16,16 0 0,0 16,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,32 A 16,16 0 0,1 32,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,32 A 16,16 0 0,0 32,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,16 A 16,16 0 0,1 48,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,16 A 16,16 0 0,0 144,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,32 A 16,16 0 0,1 160,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,32 A 16,16 0 0,0 160,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,16 A 16,16 0 0,1 176,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,16 A 16,16 0 0,0 272,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,32 A 16,16 0 0,1 288,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,32 A 16,16 0 0,0 288,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,16 A 16,16 0 0,1 304,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,16 A 16,16 0 0,0 400,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,32 A 16,16 0 0,1 416,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 432,32 A 16,16 0 0,0 416,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,16 A 16,16 0 0,1 432,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 A 16,16 0 0,0 48,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,96 A 16,16 0 0,1 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,96 A 16,16 0 0,0 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,80 A 16,16 0 0,1 144,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,80 A 16,16 0 0,0 304,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,96 A 16,16 0 0,1 352,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,96 A 16,16 0 0,0 352,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,80 A 16,16 0 0,1 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,144 A 16,16 0 0,0 112,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,160 A 16,16 0 0,1 224,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,160 A 16,16 0 0,0 224,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,144 A 16,16 0 0,1 336,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='32' y='68' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='96' y='132' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='160' y='68' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='224' y='196' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='288' y='68' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='320' y='4' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='352' y='132' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='384' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='416' y='68' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='448' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>&lt;/p>
+&lt;/div>
+&lt;p>Observe that the second largest element is only less than the maximum element. Therefore, it must be the case that the second largest element had a comparison with the maximum element.&lt;/p>
+&lt;p>Since there are $\log_2 n$ &amp;ldquo;rounds&amp;rdquo;, it takes $\log_2 n - 1$ comparisons to find the maximum element among those previously compared with the true maximum element.&lt;/p>
+&lt;p>Thus, this algorithm provides an upper bound of $n + \log_2 n - 2$ comparisons.&lt;/p>
+&lt;h3 id="lower-bound-adversarial-argument">Lower Bound (Adversarial Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic second largest element algorithm must make at least $n + \log_2 n - 2$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider the set of all comparisons made that do not involve the maximum element. Since any algorithm $A$ finds the second largest element, the same argument from the previous problem can be made to prove that this set has at least $n-2$ elements.&lt;/dd>
+&lt;dd>
+&lt;p>Let $M$ be the set of all comparisons made that involve the maximum element. The lower bound on the number of comparisons made by $A$ is&lt;/p>
+&lt;/dd>
+&lt;dd>$$n-2+|M|$$&lt;/dd>
+&lt;dd>
+&lt;p>We will now show that $|M|$ is at least $\log_2 n$.&lt;/p>
+&lt;/dd>
+&lt;dd>Let each element have a corresponding weight associated with it. The weight $w$ represents the number of elements known to be less than it. Observe that with each comparison query $\mathcal{A}$ makes between any two elements $e_1,e_2$, one of $w(e_1) := w(e_1) + w(e_2)$ or $w(e_2) := w(e_2) + w(e_1)$ will occur.&lt;/dd>
+&lt;dd>
+&lt;p>Since either is possible before the comparison occurs, we can choose which is true upon $\mathcal{A}$&amp;rsquo;s query. Specifically, we will minimize the weight increment (if $w(e_1) &amp;gt; w(e_2)$ then assign $e_1&amp;gt;e_2$ else assign $e_1&amp;lt;e_2$).&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>Observe that with this dynamic response, any weight can at most double with each comparison. Since the algorithm only knows the maximum element once such an element obtains a weight of $n-1$ (there are $n-1$ elements less than the maximum one), $|M|\geq \log_2 n$.&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>$$n - 2 + \log_2 n$$&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>This is an &lt;em>&lt;strong>adversarial&lt;/strong>&lt;/em> argument since the proof constructs an adversary that dynamically responds to any algorithm&amp;rsquo;s queries such that it minimizes the algorithm&amp;rsquo;s effectiveness.&lt;/p>
+&lt;h2 id="graph-connectivity">Graph Connectivity&lt;/h2>
+&lt;h3 id="upper-bound-3">Upper Bound&lt;/h3>
+&lt;p>Query every pair to know the entire graph. In an $n$-node graph, this is $n\choose 2$ queries.&lt;/p>
+&lt;h3 id="lower-bound-adversarial-argument-1">Lower Bound (Adversarial Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic graph connectivity algorithm must make $n\choose 2$ queries&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>We will again construct an adversary $\mathcal{E}$ to maximize the number of required queries an algorithm $\mathcal{A}$ must make.&lt;/dd>
+&lt;dd>
+&lt;p>Observe that the edges declared by $\mathcal{A}$ form a forest of trees (where $\mathcal{A}$ aims to determine if the number of trees in the forest is exactly $1$). $\mathcal{E}$ will maintain the following invariant.&lt;/p>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>For each tree $T$, all possible edges among its vertices have been queried&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>For each pair of trees $T_1, T_2$, $\exists (e_1,e_2)$ such that $e_1\in T_1, e_2\in T_2$.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>
+&lt;p>In other words, only dynamically create an edge if it is the last edge to connect two forests.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Intuitively $\mathcal{E}$&amp;rsquo;s idea is that if it creates an edge between two trees $T_1, T_2$, but it is not the last possible edge query between $T_1, T_2$, then $\mathcal{A}$ would not need to
+query any more edges between $T_1, T_2$.&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 400 137"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 32,64 L 64,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,80 L 128,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,64 L 160,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,64 L 48,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='104.000000,80.000000 92.000000,74.400002 92.000000,85.599998' fill='currentColor' transform='rotate(180.000000, 96.000000, 80.000000)'>&lt;/polygon>
+&lt;polygon points='136.000000,80.000000 124.000000,74.400002 124.000000,85.599998' fill='currentColor' transform='rotate(0.000000, 128.000000, 80.000000)'>&lt;/polygon>
+&lt;circle cx='32' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='64' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='16' y='68' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='48' y='116' fill='currentColor' style='font-size:1em'>b&lt;/text>
+&lt;text text-anchor='middle' x='80' y='68' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='112' y='68' fill='currentColor' style='font-size:1em'>?&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='160' y='52' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='160' y='116' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>In the above example, there currently exists $0$ queries between trees $T_1$ and $T_2$. If $\mathcal{A}$ queries $(b, e)$ and $\mathcal{E}$ responds with &lt;em>&lt;strong>yes&lt;/strong>&lt;/em>, then $\mathcal{A}$ has no need to query any more edges between $T_1$ and $T_2$ because it already knows that there is going to be some path in $T_1$ to $b$ which connects to some path in $T_2$ to $e$.&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>AFSOC $\mathcal{A}$ outputs without querying $n\choose 2$ edges from $\mathcal{E}$. By definition of $\mathcal{E}$, $\exists T_1, T_2, &amp;hellip;, T_t$ such that there is no queried connecting edge between $T_i, T_j\thickspace \forall i, j$.&lt;/dd>
+&lt;dd>
+&lt;ul>
+&lt;li>If $\mathcal{A}$ outputs &lt;em>&lt;strong>yes&lt;/strong>&lt;/em>, then suppose all un-queried edges are not in the graph.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>If $\mathcal{A}$ outputs &lt;em>&lt;strong>no&lt;/strong>&lt;/em>, then suppose all un-queried edges are indeed in the graph.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote></description></item></channel></rss>

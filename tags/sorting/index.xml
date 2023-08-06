@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>sorting on glee</title><link>https://kiblitz.github.io/tags/sorting/</link><description>Recent content in sorting on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/sorting/index.xml" rel="self" type="application/rss+xml"/><item><title>Convex Hull</title><link>https://kiblitz.github.io/p/convex-hull/</link><pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/convex-hull/</guid><description>&lt;img src="https://kiblitz.github.io/p/convex-hull/metal.jpeg" alt="Featured image of post Convex Hull" />
+&lt;style>
+html, body {
+margin: 0;
+padding: 0;
+top: 0.5px;
+bottom: 0.5px;
+width: 100%;
+height: 100%;
+}
+canvas {
+width: 100%;
+height: 100%;
+}
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="canvas">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+const NUM_EX = 5;
+function init() {
+window.canvas = document.getElementById("canvas");
+window.ex = Array.from({length: NUM_EX}, (_, i) => document.getElementById("ex" + i));
+window.ctx = window.canvas.getContext("2d");
+window.pts = Array.from({length: 10}, () => [Math.random(), Math.random()]);
+window.canvas.addEventListener("mousemove", onMouseMove, true);
+window.canvas.addEventListener("mouseup", onMouseUp, true);
+window.canvas.addEventListener("mousedown", onMouseDown, true);
+window.canvas.addEventListener("touchmove", onMouseMove, true);
+window.canvas.addEventListener("touchend", onMouseUp, true);
+window.canvas.addEventListener("touchstart", onMouseDown, true);
+window.canvas.addEventListener("mouseleave", onMouseLeave, true);
+window.canvas.addEventListener("mouseenter", onMouseEnter, true);
+window.mouseX = 0;
+window.mouseY = 0;
+window.mouseDown = false;
+window.mousePt = null;
+window.mouseInFrame = false;
+window.mouseLeeway = 1;
+updateConvexHull();
+updateDimensions();
+}
+function onMouseMove() {
+window.mouseInFrame = true;
+var mouseX, mouseY;
+if (event.targetTouches &amp;&amp; event.changedTouches) {
+mouseX = (event.targetTouches[0] ? event.targetTouches[0].pageX : event.changedTouches[event.changedTouches.length-1].pageX) - window.canvas.getBoundingClientRect().left;
+mouseY = (event.targetTouches[0] ? event.targetTouches[0].clientY : event.changedTouches[event.changedTouches.length-1].clientY) - window.canvas.getBoundingClientRect().top;
+window.mouseLeeway = 8;
+} else {
+mouseX = window.event.clientX - window.canvas.getBoundingClientRect().left;
+mouseY = window.event.clientY - window.canvas.getBoundingClientRect().top;
+window.mouseLeeway = 1;
+}
+if (window.mousePt !== null) {
+let scaledDiff = windowUnscalePt([mouseX - window.mouseX, mouseY - window.mouseY]);
+window.pts[window.mousePt][0] += scaledDiff[0];
+window.pts[window.mousePt][1] += scaledDiff[1];
+updateConvexHull();
+}
+window.mouseX = mouseX;
+window.mouseY = mouseY;
+redraw();
+}
+function onMouseDown(e) {
+onMouseMove();
+e.preventDefault();
+window.mouseDown = true;
+let minDist = Infinity;
+window.pts.forEach((pt, i) => {
+let scaledPt = windowScalePt(pt);
+let dist = Math.pow(window.mouseX - scaledPt[0], 2) + Math.pow(window.mouseY - scaledPt[1], 2);
+if (dist &lt;= window.mouseLeeway * Math.pow(window.dot_dim, 2) &amp;&amp; dist &lt;= minDist) {
+window.mousePt = i;
+minDist = dist;
+}
+});
+redraw();
+}
+function onMouseUp() {
+window.mouseDown = false;
+if (window.mousePt !== null) {
+let x = window.pts[window.mousePt][0];
+let y = window.pts[window.mousePt][1];
+window.pts[window.mousePt][0] = Math.min(Math.max(x, 0), 1);
+window.pts[window.mousePt][1] = Math.min(Math.max(y, 0), 1);
+window.mousePt = null;
+}
+redraw();
+}
+function onMouseLeave() {
+window.mouseInFrame = false;
+onMouseUp();
+}
+function onMouseEnter() {
+window.mouseInFrame = true;
+}
+function redraw() {
+window.ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+window.ctx.fillStyle = 'white';
+window.ctx.strokeStyle = 'white';
+window.ctx.lineWidth = window.mouseInFrame ? 2 : 1;
+window.ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+window.ctx.lineWidth = 1;
+window.pts.forEach(pt => {
+window.ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+window.ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+window.ctx.stroke();
+if (Math.pow(window.mouseX - scaledPt[0], 2)
++ Math.pow(window.mouseY - scaledPt[1], 2)
+&lt;= window.mouseLeeway * Math.pow(window.dot_dim, 2)) {
+window.ctx.fill();
+}
+});
+window.ctx.beginPath();
+let scaledStart = windowScalePt(window.ch[0]);
+window.ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; window.ch.length; i++) {
+let scaledStart = windowScalePt(window.ch[i]);
+window.ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+window.ctx.closePath();
+window.ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+window.ctx.fill();
+for (let i = 0; i &lt; NUM_EX; i++) {
+window["ex" + i + "redraw"]();
+}
+}
+function updateDimensions() {
+window.width = window.canvas.getBoundingClientRect().width;
+window.height = window.width / 3;
+window.canvas.width = window.width;
+window.canvas.height = window.height;
+window.dot_dim = window.width > 600 ? 6 : 5;
+for (let i = 0; i &lt; NUM_EX; i++) {
+window.ex[i].width = window.width;
+window.ex[i].height = window.height;
+}
+redraw();
+}
+function updateConvexHull() {
+let min_elem = window.pts.reduce(
+(min, p) => p[0] &lt; min[0] ? p
+: (p[0] == min[0] &amp;&amp; p[1] &lt; min[1] ? p
+: min), window.pts[0]
+);
+let pts = window.pts.filter(pt => pt !== min_elem)
+pts.sort((a, b) => {
+a_slope = (a[1] - min_elem[1]) / (a[0] - min_elem[0]);
+b_slope = (b[1] - min_elem[1]) / (b[0] - min_elem[0]);
+if (isNaN(a_slope)) {
+a_slope = Math.sign(a[1] - min_elem[1]) * Infinity;
+}
+if (isNaN(b_slope)) {
+b_slope = Math.sign(b[1] - min_elem[1]) * Infinity;
+}
+if (a_slope === b_slope) {
+return 0;
+}
+return a_slope - b_slope;
+});
+let ch = [min_elem];
+pts.forEach(pt => {
+if (ch.length &lt; 2) {
+ch.push(pt);
+return;
+}
+while (ch.length > 1) {
+let a = [
+ch[ch.length - 1][0] - ch[ch.length - 2][0],
+ch[ch.length - 1][1] - ch[ch.length - 2][1]
+];
+let b = [
+pt[0] - ch[ch.length - 1][0],
+pt[1] - ch[ch.length - 1][1]
+];
+let det = a[0] * b[1] - b[0] * a[1];
+if (det &lt; 0) {
+ch.pop();
+} else {
+break;
+}
+};
+ch.push(pt);
+});
+window.ch = ch;
+}
+function windowScalePt(pt) {
+return [pt[0] * window.canvas.width, pt[1] * window.canvas.height];
+}
+function windowUnscalePt(pt) {
+return [pt[0] / window.canvas.width, pt[1] / window.canvas.height];
+}
+&lt;/script>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode tip" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#tip-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Drag the points!&lt;/p>
+&lt;/div>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;blockquote>
+&lt;p>Given a set of points, what is the smallest convex shape that encloses all of them? What is the boundary of this shape?&lt;/p>
+&lt;/blockquote>
+&lt;p>This is the convex hull problem.&lt;/p>
+&lt;h2 id="2d-convex-hull">2D Convex Hull&lt;/h2>
+&lt;h3 id="observations">Observations&lt;/h3>
+&lt;p>Notice that given a convex hull, all points lie on the same side of every edge.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 248 169"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 40,0 L 200,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 8,144 L 208,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,80 L 0,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 232,64 L 232,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 8,64 L 40,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,144 L 224,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,16 L 232,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='8.000000,128.000000 -4.000000,122.400002 -4.000000,133.600006' fill='currentColor' transform='rotate(90.000000, 0.000000, 128.000000)'>&lt;/polygon>
+&lt;polygon points='20.000000,64.000000 8.000000,58.400002 8.000000,69.599998' fill='currentColor' transform='rotate(120.000000, 8.000000, 64.000000)'>&lt;/polygon>
+&lt;polygon points='8.000000,144.000000 -4.000000,138.399994 -4.000000,149.600006' fill='currentColor' transform='rotate(180.000000, 8.000000, 144.000000)'>&lt;/polygon>
+&lt;polygon points='200.000000,0.000000 188.000000,-5.600000 188.000000,5.600000' fill='currentColor' transform='rotate(0.000000, 200.000000, 0.000000)'>&lt;/polygon>
+&lt;polygon points='228.000000,16.000000 216.000000,10.400000 216.000000,21.600000' fill='currentColor' transform='rotate(240.000000, 216.000000, 16.000000)'>&lt;/polygon>
+&lt;polygon points='236.000000,112.000000 224.000000,106.400002 224.000000,117.599998' fill='currentColor' transform='rotate(300.000000, 224.000000, 112.000000)'>&lt;/polygon>
+&lt;polygon points='240.000000,64.000000 228.000000,58.400002 228.000000,69.599998' fill='currentColor' transform='rotate(270.000000, 232.000000, 64.000000)'>&lt;/polygon>
+&lt;circle cx='0' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='0' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='40' cy='0' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='112' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='80' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='112' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='136' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='192' cy='128' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='208' cy='0' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='208' cy='144' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='232' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='232' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Observe that for every edge, all points lie on the same side (right for top and bottom; left for all other).&lt;/p>&lt;/p>
+&lt;/div>
+&lt;h3 id="idea-1-add-edges-with-all-points-on-the-same-side">Idea 1: Add Edges with All Points on the same side&lt;/h3>
+&lt;h4 id="naive-algorithm">Naive Algorithm&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{bool allPointsOnSameSideOf($e$):}\newline
+&amp;amp;\texttt{\qquad for all other points $p\not\in e$:}\newline
+&amp;amp;\texttt{\qquad \qquad if any $p$ on different side of $e$:}\newline
+&amp;amp;\texttt{\qquad \qquad \qquad return false}\newline
+&amp;amp;\texttt{\qquad return true}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{for all points $p1$:}\newline
+&amp;amp;\texttt{\qquad for all other points $p2$:}\newline
+&amp;amp;\texttt{\qquad \qquad consider edge $e$ = ($p1$, $p2$)}\newline
+&amp;amp;\texttt{\qquad \qquad if allPointsOnSameSideOf($e$):}\newline
+&amp;amp;\texttt{\qquad \qquad \qquad add $e$ to convex hull}\newline
+\end{align*}
+$$&lt;/p>
+&lt;p>Checking if all points are on the same side is a linear ($\mathcal{O}(n)$) operation. Iterating through all possible edges is a quadratic operation ($\mathcal{O}(n^2)$). Thus, this algorithm has cubic time complexity ($\mathcal{O}(n^3)$).&lt;/p>
+&lt;h4 id="observation">Observation&lt;/h4>
+&lt;p>We are checking all possible edges, but really edges are contiguous on a hull ($A\rightarrow B\rightarrow C\rightarrow A$ like a chain).&lt;/p>
+&lt;p>But what about the first edge? Here&amp;rsquo;s another observation: the convex hull must contain the leftmost ($\min_x$) point!&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>If there are multiple leftmost points, then they must all be on the convex hull. Otherwise, that point would not be contained in the convex hull.&lt;/p>
+&lt;/div>
+&lt;p>With this chain in mind, we shouldn&amp;rsquo;t be iterating over all points for the next: in a chain, the next point should be &amp;ldquo;close&amp;rdquo; to the current pivot point. Could we precompute with a sort in some way?&lt;/p>
+&lt;h3 id="graham-scan">Graham Scan&lt;/h3>
+&lt;h4 id="algorithm">Algorithm&lt;/h4>
+&lt;p>$$
+\begin{align*}
+&amp;amp;\texttt{let hull = [$\min_x$]}\newline
+&amp;amp;\texttt{sort all points by $\theta$ with $\min_x$}\newline
+&amp;amp;\newline
+&amp;amp;\texttt{for all points $p\neq\min_x$:}\newline
+&amp;amp;\texttt{\qquad add $p$ to hull}\newline
+&amp;amp;\texttt{\qquad while hull (with $p$) is no longer convex:}\newline
+&amp;amp;\texttt{\qquad \qquad pop hull}\newline
+\end{align*}
+$$
+Convex meaning that the hull only &amp;ldquo;leans&amp;rdquo; in one direction (always curving left OR always curving right). This can easily be checked by verifying that the current point $p$ is on the same side of the previous edge (or vacuously true if there is no previous edge).&lt;/p>
+&lt;h4 id="example">Example&lt;/h4>
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="ex0">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+function ex0redraw() {
+let canvas = window.ex[0];
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = 'white';
+ctx.strokeStyle = 'white';
+ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+let pts = [
+[0.09349743488591489, 0.586267349659145],
+[0.40060336938038543, 0.8863856711116301],
+[0.7331262185197241, 0.851984423840718],
+[0.41631943954503126, 0.5888341099600415],
+[0.31631943954503126, 0.5288341099600415],
+[0.5151129707167391, 0.2959397175037858],
+[0.4494122161398628, 0.09309081188615609],
+[0.13235547336082165, 0.3696404944957633]
+];
+ctx.font = (4 * window.dot_dim) + "px bold serif";
+pts.forEach((pt, i) => {
+ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+ctx.fillStyle = 'black';
+if (i === 0) {
+ctx.fillStyle = 'red';
+}
+ctx.fill();
+ctx.fillStyle = 'white';
+if (i !== 0) {
+ctx.fillText(i, scaledPt[0], scaledPt[1])
+}
+});
+let hull = [
+pts[0]
+];
+ctx.beginPath();
+let scaledStart = windowScalePt(hull[0]);
+ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; hull.length; i++) {
+let scaledStart = windowScalePt(hull[i]);
+ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+ctx.closePath();
+ctx.stroke();
+}
+&lt;/script>
+&lt;p>Here, the leftmost point is highlighted in red. We sort the other points by their angle with this point (ordered numbering).&lt;/p>
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="ex1">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+function ex1redraw() {
+let canvas = window.ex[1];
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = 'white';
+ctx.strokeStyle = 'white';
+ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+let pts = [
+[0.09349743488591489, 0.586267349659145],
+[0.40060336938038543, 0.8863856711116301],
+[0.7331262185197241, 0.851984423840718],
+[0.41631943954503126, 0.5888341099600415],
+[0.31631943954503126, 0.5288341099600415],
+[0.5151129707167391, 0.2959397175037858],
+[0.4494122161398628, 0.09309081188615609],
+[0.13235547336082165, 0.3696404944957633]
+];
+let hull = [
+pts[0],
+pts[1],
+pts[2],
+pts[3],
+pts[4]
+];
+ctx.beginPath();
+let scaledStart = windowScalePt(hull[0]);
+ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; hull.length; i++) {
+let scaledStart = windowScalePt(hull[i]);
+ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+ctx.stroke();
+pts.forEach((pt, i) => {
+ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+ctx.fillStyle = 'black';
+if (i === 4) {
+ctx.fillStyle = 'red';
+}
+ctx.fill();
+ctx.fillStyle = 'white';
+});
+}
+&lt;/script>
+&lt;p>After a few iterations, our hull is still convex (always left leaning).&lt;/p>
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="ex2">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+function ex2redraw() {
+let canvas = window.ex[2];
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = 'white';
+ctx.strokeStyle = 'white';
+ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+let pts = [
+[0.09349743488591489, 0.586267349659145],
+[0.40060336938038543, 0.8863856711116301],
+[0.7331262185197241, 0.851984423840718],
+[0.41631943954503126, 0.5888341099600415],
+[0.31631943954503126, 0.5288341099600415],
+[0.5151129707167391, 0.2959397175037858],
+[0.4494122161398628, 0.09309081188615609],
+[0.13235547336082165, 0.3696404944957633]
+];
+let hull = [
+pts[0],
+pts[1],
+pts[2],
+pts[3],
+pts[4],
+pts[5]
+];
+ctx.beginPath();
+let scaledStart = windowScalePt(hull[0]);
+ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; hull.length; i++) {
+let scaledStart = windowScalePt(hull[i]);
+ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+ctx.stroke();
+pts.forEach((pt, i) => {
+ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+ctx.fillStyle = 'black';
+if (i === 5) {
+ctx.fillStyle = 'red';
+}
+ctx.fill();
+ctx.fillStyle = 'white';
+});
+}
+&lt;/script>
+&lt;p>Now, the hull&amp;rsquo;s convexitivity breaks.&lt;/p>
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="ex3">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+function ex3redraw() {
+let canvas = window.ex[3];
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = 'white';
+ctx.strokeStyle = 'white';
+ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+let pts = [
+[0.09349743488591489, 0.586267349659145],
+[0.40060336938038543, 0.8863856711116301],
+[0.7331262185197241, 0.851984423840718],
+[0.41631943954503126, 0.5888341099600415],
+[0.31631943954503126, 0.5288341099600415],
+[0.5151129707167391, 0.2959397175037858],
+[0.4494122161398628, 0.09309081188615609],
+[0.13235547336082165, 0.3696404944957633]
+];
+let hull = [
+pts[0],
+pts[1],
+pts[2],
+pts[3],
+pts[5]
+];
+ctx.beginPath();
+let scaledStart = windowScalePt(hull[0]);
+ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; hull.length; i++) {
+let scaledStart = windowScalePt(hull[i]);
+ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+ctx.stroke();
+pts.forEach((pt, i) => {
+ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+ctx.fillStyle = 'black';
+if (i === 5) {
+ctx.fillStyle = 'red';
+}
+ctx.fill();
+ctx.fillStyle = 'white';
+});
+}
+&lt;/script>
+&lt;p>Still broken (we only have to check that the current red point is on the left side of the 2nd-to-last edge).&lt;/p>
+&lt;/style>
+&lt;html>
+&lt;body onload="init();" onresize="updateDimensions();">
+&lt;canvas id="ex4">&lt;/canvas>
+&lt;/body>
+&lt;/html>
+&lt;script>
+function ex4redraw() {
+let canvas = window.ex[4];
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = 'white';
+ctx.strokeStyle = 'white';
+ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+ctx.strokeRect(0, 0, window.canvas.width, window.canvas.height);
+let pts = [
+[0.09349743488591489, 0.586267349659145],
+[0.40060336938038543, 0.8863856711116301],
+[0.7331262185197241, 0.851984423840718],
+[0.41631943954503126, 0.5888341099600415],
+[0.31631943954503126, 0.5288341099600415],
+[0.5151129707167391, 0.2959397175037858],
+[0.4494122161398628, 0.09309081188615609],
+[0.13235547336082165, 0.3696404944957633]
+];
+let hull = [
+pts[0],
+pts[1],
+pts[2],
+pts[5]
+];
+ctx.beginPath();
+let scaledStart = windowScalePt(hull[0]);
+ctx.moveTo(scaledStart[0], scaledStart[1]);
+for (let i = 1; i &lt; hull.length; i++) {
+let scaledStart = windowScalePt(hull[i]);
+ctx.lineTo(scaledStart[0], scaledStart[1]);
+}
+ctx.stroke();
+pts.forEach((pt, i) => {
+ctx.beginPath();
+let scaledPt = windowScalePt(pt);
+ctx.arc(scaledPt[0], scaledPt[1], window.dot_dim, 0, 2 * Math.PI);
+ctx.fillStyle = 'black';
+if (i === 5) {
+ctx.fillStyle = 'red';
+}
+ctx.fill();
+ctx.fillStyle = 'white';
+});
+}
+&lt;/script>
+&lt;p>Convex!&lt;/p>
+&lt;hr>
+&lt;p>If we continue the algorithm, we will eventually reach the full convex hull.&lt;/p>
+&lt;h3 id="analysis">Analysis&lt;/h3>
+&lt;p>Determining the leftmost point just requires a linear scan ($\mathcal{O}(n)$). Since determining the angle between two points takes constant time ($\mathcal{O}(1)$), the initial sort has the normal time complexity $\mathcal{O}(n \log n)$.&lt;/p>
+&lt;p>Every point will be the current point (red dot in example) exactly once, so this iteration has linear time complexity ($\mathcal{O}(n)$).&lt;/p>
+&lt;p>What about popping non-convex points? Observe that any point can be popped at most once! So it has linear time complexity ($\mathcal{O}(n)$).&lt;/p>
+&lt;p>$$\mathcal{O}(n) + \mathcal{O}(n \log n) + \mathcal{O}(n) + \mathcal{O}(n)$$ $$\subseteq\mathcal{O}(n \log n)$$&lt;/p>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>A bit of notation abuse, but I think the point still gets across.&lt;/p>
+&lt;/div>
+&lt;h2 id="above-and-beyond">Above and Beyond&lt;/h2>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Anything in this section serves as very light introductions to convex hull extensions. You should treat them as just introductions and feel free to explore further beyond this blog post.&lt;/p>
+&lt;/div>
+&lt;p>There are various algorithms for solving this problem in $d$-dimensions. For the 3D problem, there exists a deterministic divide-and-conquer $\mathcal{O}(n \log n)$ algorithm (but is notoriously difficult, especially the merge step).&lt;/p>
+&lt;h3 id="chans-algorithm">Chan&amp;rsquo;s Algorithm&lt;/h3>
+&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Chan%27s_algorithm" target="_blank" rel="noopener"
+>Chan&amp;rsquo;s algorithm&lt;/a> is an output-sensitive algorithm for calculating the convex hull in 2D and 3D space.&lt;/p>
+&lt;p>It relies on existing $\mathcal{O}(n \log n)$ algorithms in those spaces (Graham Scan, divide-and-conquer, etc.) and uses them to solve subpartitions of the original point set. It then combines these mini-convex hulls to solve the full problem.&lt;/p>
+&lt;p>It has time complexity $\mathcal{O}(n \log h)$, where $h$ is the number of vertices in the solution convex hull.&lt;/p>
+&lt;h3 id="quick-hull">Quick Hull&lt;/h3>
+&lt;p>For the general $d$, &lt;a class="link" href="https://en.wikipedia.org/wiki/Quickhull" target="_blank" rel="noopener"
+>Quick Hull&lt;/a> is a &lt;a class="link" href="https://en.wikipedia.org/wiki/Las_Vegas_algorithm" target="_blank" rel="noopener"
+>Las Vegas algorithm&lt;/a> that has a time complexity of $\mathcal{O}(n \log n)$ in expectation for the 2D and 3D case.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The $d$-dimensional generalization adds a time complexity factor of $n^{\lfloor\frac{d}{2}\rfloor}$. I don&amp;rsquo;t have great intuition on this expression, but it has to do with the number of facets on a $d$-dimensional object (increasing recursion breadth).&lt;/p>
+&lt;/div>
+&lt;p>I don&amp;rsquo;t have great exposure to Quick Hull, but the general idea is that we begin with a &amp;ldquo;starter hull&amp;rdquo; (subset of the convex hull; encompasses a large percentage of points in expectation).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>For the 2D case, this hull might have $p_1=\min_x$, $p_2=\max_x$, and $p_3=\max_\text{dist}(p_1p_2)$ (the point that is furthest from the line $p_1p_2$).&lt;/p>
+&lt;p>For the 3D case, this hull might have the same points as in the 2D case plus $p_4=\max_\text{dist}(p_1p_2p_3)$ (the point that is furthest from the plane $p_1p_2p_3$)&lt;/p>
+&lt;/div>
+&lt;p>Then, for each facet on the current hull (line in 2D; plane in 3D), add the point $p$ (on the other side of the hull) farthest from the facet.&lt;/p>
+&lt;p>This inclusion may break the convexitivity of the current hull. Perform &lt;a class="link" href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank" rel="noopener"
+>BFS&lt;/a> to determine the &amp;ldquo;horizon&amp;rdquo; of $p$ and remove all visited points not in the horizon.&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The horizon is what you might be able to see if you were to put your eye at $p$. This can be checked using linear algebra magic.&lt;/p>
+&lt;p>If you can see a point $a$ behind a point $b$, then that means $b$ is not in the horizon and causes the hull to be concave.&lt;/p>
+&lt;/div>
+&lt;p>Recursively repeat the previous two steps until every point is enclosed in the hull.&lt;/p></description></item><item><title>II. Bounding Problems</title><link>https://kiblitz.github.io/p/bounding-problems/</link><pubDate>Fri, 09 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/bounding-problems/</guid><description>&lt;img src="https://kiblitz.github.io/p/bounding-problems/waterfall_rock.jpg" alt="Featured image of post II. Bounding Problems" />&lt;h2 id="sorting">Sorting&lt;/h2>
+&lt;h3 id="lower-bound-info-theory-argument">Lower Bound (Info Theory Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>&lt;em>&lt;strong>Any&lt;/strong>&lt;/em> deterministic sorting algorithm on an array of length $n$ must make at least $\log_2(n!)$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Observe that sorting is just a permutation on the input array. In total, there are $n!$ permutations. In the worst case, only one permutation corresponds to a sorted array.
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>This is when all elements in the array are unique&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;dd>Observe that each comparison ($a {_?\atop &amp;gt;} b$) partitions the solution space into two: permutations that are still possibly correct and permutations that are not.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Suppose we have $[3, 1, 2]$. At the start of the algorithm (without having made any comparisons), all permutations could potentially be correct (sorted). However, once we make the comparison between $3 {?\atop &amp;gt;} 1 \Rightarrow 1 &amp;lt; 3$, every permutation where $3$ comes before $1$ is known to be incorrect.&lt;/p>
+&lt;p>$$\cancel{[3,1,2]}\newline\cancel{[3,2,1]}\newline[2,1,3]\newline\cancel{[2,3,1]}\newline[1,3,2]\newline[1,2,3]$$&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;dd>Since in the worst case, the algorithm will mark the smaller partition as incorrect, it must be the case that each comparison shrinks the solution space by at most half. So in the worst case, it takes $\log_2(n!)$ comparisons.&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>This is an &lt;a class="link" href="https://en.wikipedia.org/wiki/Information_theory" target="_blank" rel="noopener"
+>information theoretic&lt;/a> argument since the proof is explaining that any algorithm requires $\log_2 n$ bits of information.&lt;/p>
+&lt;h2 id="upper-bound">Upper Bound&lt;/h2>
+&lt;blockquote>
+&lt;p>$\texttt{MergeSort}(A)$&lt;/p>
+&lt;ul>
+&lt;li>Split $A$ into two contiguous subarrays $L,R$ with (approximately) equal number of elements&lt;/li>
+&lt;li>$L&amp;rsquo;=\texttt{MergeSort}(L)$, $R&amp;rsquo;=\texttt{MergeSort}(R)$&lt;/li>
+&lt;li>Merge sorted $L&amp;rsquo;$ and $R&amp;rsquo;$ to create sorted $A&amp;rsquo;$
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>You can inductively reason that $L&amp;rsquo;$ and $R&amp;rsquo;$ are sorted.&lt;/p>
+&lt;/div>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The merging is done linearly using two pointers on $L&amp;rsquo;$ and $R&amp;rsquo;$ and appending the lesser of the two values to $A&amp;rsquo;$ while incrementing that pointer (this is possible because $L&amp;rsquo;$ and $R&amp;rsquo;$ are both sorted)&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>The only comparisons done in $\texttt{MergeSort}$ are in the last step. Every comparison increments at least one pointer, which can happen at most $n-1$ times (See &lt;a class="link" href="https://www.geeksforgeeks.org/merge-two-sorted-arrays/" target="_blank" rel="noopener"
+>this&lt;/a> for a more thorough explanation on the last step).&lt;/p>
+&lt;p>Unrolling the recurrence:
+$$\begin{align*}&amp;amp;\thickspace\underbrace{(n-1)+2(\frac{n}{2}-1)+4(\frac{n}{4}-1)+&amp;hellip;}_{\log_2(n)}\newline=&amp;amp;\thickspace (n-1) + (n-2) + (n-4) + &amp;hellip; \newline=&amp;amp;\thickspace n\log_2 n - (n - 1) \newline &amp;lt;&amp;amp; \thickspace n\log_2 n\newline\in&amp;amp;\thickspace \mathcal{O}(n\log n)\end{align*}$$&lt;/p>
+&lt;p>Since $\log_2(n!)\in\Omega(n \log n)$, the bound is tight.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$\begin{align*}\log_2 (n!) &amp;amp;= \log_2(n) + \log_2(n - 1) + \log_2(n - 2) + &amp;hellip; + \log_2(1) \newline &amp;amp;&amp;gt; \frac{n}{2}\log_2 (\frac{n}{2}) \newline &amp;amp;= \Omega(n \log n) \end{align*}$$&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;h2 id="maximum-element">Maximum Element&lt;/h2>
+&lt;h3 id="upper-bound-1">Upper Bound&lt;/h3>
+&lt;p>Scanning the array from left to right while keeping track of the largest seen element requires $n-1$ comparisons.&lt;/p>
+&lt;h3 id="lower-bound">Lower Bound&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic maximum element algorithm must make at least $n - 1$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>AFSOC there exists an algorithm $\mathcal{A}$ which makes less than $n-1$ comparisons. Construct a graph with $n$ vertices for each array element. For every comparison $\mathcal{A}$ makes between two elements, append an edge to the graph between the corresponding vertices. Since there are less than $n-1$ edges, there must be at least two islands.&lt;/dd>
+&lt;dd>
+&lt;p>If $\mathcal{A}$ selects an element $e$ in an island, consider the same input array except all corresponding elements on every other island are incremented by $e$. The observations $\mathcal{A}$ makes are the same since the comparisons known are only within an island, yet clearly $e$ cannot be the maximum element.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Suppose our array is $[1, 2, 3, 4, 5, 6, 7]$ labelled $[a, b, c, d, e, f, g]$ and $\mathcal{A}$ makes the following ($n-2=5$) comparisons:
+$$
+a_{(1)}&amp;lt;c_{(3)}\newline
+c_{(3)}&amp;lt;g_{(7)}\newline
+g_{(7)}&amp;gt;d_{(4)}\newline
+\text{}\newline
+b_{(2)}&amp;lt;f_{(6)}\newline
+f_{(6)}&amp;gt;e_{(5)}\newline
+$$&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 392 217"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 64,32 L 80,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,32 L 352,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,64 L 80,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,64 L 352,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,192 L 48,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,192 L 320,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 64,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,32 L 80,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,32 L 336,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,32 L 352,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,48 L 32,16' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 L 48,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,192 L 32,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,48 L 304,16' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,80 L 320,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,192 L 304,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,176 L 376,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 L 48,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,48 L 32,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,16 L 48,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,160 L 320,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,48 L 304,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,16 L 320,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='372.000000,176.000000 360.000000,170.399994 360.000000,181.600006' fill='currentColor' transform='rotate(120.000000, 360.000000, 176.000000)'>&lt;/polygon>
+&lt;circle cx='16' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='16' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='32' cy='160' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='288' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='288' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='16' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='80' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='304' cy='160' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='320' cy='48' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='320' cy='192' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='0' y='52' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='0' y='196' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='32' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='32' y='148' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='64' y='196' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='72' y='52' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='136' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='144' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='152' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='160' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='168' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='176' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='184' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='192' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='200' y='100' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='208' y='100' fill='currentColor' style='font-size:1em'>&amp;gt;&lt;/text>
+&lt;text text-anchor='middle' x='272' y='52' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='272' y='196' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='296' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='304' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='304' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='304' y='148' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='336' y='196' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='52' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='344' y='196' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Now look at the comparisons after the incremental modification to $[1, 9, 3, 4, 5, 12, 13]$ labelled $[a, b, c, d, e, f, g]$:
+$$
+a_{(1)}&amp;lt;c_{(3)}\newline
+c_{(3)}&amp;lt;g_{(7)}\newline
+g_{(7)}&amp;gt;d_{(4)}\newline
+\text{}\newline
+b_{(9)}&amp;lt;f_{(13)}\newline
+f_{(13)}&amp;gt;e_{(12)}\newline
+$$
+The comparisons are still true yet $\mathcal{A}$&amp;rsquo;s original output is incorrect!&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;h2 id="second-largest-element">Second Largest Element&lt;/h2>
+&lt;h3 id="upper-bound-2">Upper Bound&lt;/h3>
+&lt;p>Find the maximum element with a &amp;ldquo;playoffs&amp;rdquo; structure ($n-1$ comparisons).&lt;/p>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 464 217"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 48,96 L 80,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,96 L 144,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,96 L 336,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,96 L 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,160 L 208,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,160 L 336,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,16 A 16,16 0 0,0 16,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,32 A 16,16 0 0,1 32,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,32 A 16,16 0 0,0 32,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,16 A 16,16 0 0,1 48,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,16 A 16,16 0 0,0 144,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,32 A 16,16 0 0,1 160,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,32 A 16,16 0 0,0 160,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,16 A 16,16 0 0,1 176,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,16 A 16,16 0 0,0 272,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,32 A 16,16 0 0,1 288,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,32 A 16,16 0 0,0 288,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,16 A 16,16 0 0,1 304,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 384,16 A 16,16 0 0,0 400,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,32 A 16,16 0 0,1 416,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 432,32 A 16,16 0 0,0 416,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,16 A 16,16 0 0,1 432,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 A 16,16 0 0,0 48,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,96 A 16,16 0 0,1 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,96 A 16,16 0 0,0 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,80 A 16,16 0 0,1 144,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,80 A 16,16 0 0,0 304,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,96 A 16,16 0 0,1 352,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,96 A 16,16 0 0,0 352,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,80 A 16,16 0 0,1 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,144 A 16,16 0 0,0 112,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,160 A 16,16 0 0,1 224,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,160 A 16,16 0 0,0 224,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,144 A 16,16 0 0,1 336,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='32' y='68' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='96' y='132' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='160' y='68' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='224' y='196' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='288' y='68' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='320' y='4' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='352' y='132' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='384' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='416' y='68' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='448' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>&lt;/p>
+&lt;/div>
+&lt;p>Observe that the second largest element is only less than the maximum element. Therefore, it must be the case that the second largest element had a comparison with the maximum element.&lt;/p>
+&lt;p>Since there are $\log_2 n$ &amp;ldquo;rounds&amp;rdquo;, it takes $\log_2 n - 1$ comparisons to find the maximum element among those previously compared with the true maximum element.&lt;/p>
+&lt;p>Thus, this algorithm provides an upper bound of $n + \log_2 n - 2$ comparisons.&lt;/p>
+&lt;h3 id="lower-bound-adversarial-argument">Lower Bound (Adversarial Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic second largest element algorithm must make at least $n + \log_2 n - 2$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Consider the set of all comparisons made that do not involve the maximum element. Since any algorithm $A$ finds the second largest element, the same argument from the previous problem can be made to prove that this set has at least $n-2$ elements.&lt;/dd>
+&lt;dd>
+&lt;p>Let $M$ be the set of all comparisons made that involve the maximum element. The lower bound on the number of comparisons made by $A$ is&lt;/p>
+&lt;/dd>
+&lt;dd>$$n-2+|M|$$&lt;/dd>
+&lt;dd>
+&lt;p>We will now show that $|M|$ is at least $\log_2 n$.&lt;/p>
+&lt;/dd>
+&lt;dd>Let each element have a corresponding weight associated with it. The weight $w$ represents the number of elements known to be less than it. Observe that with each comparison query $\mathcal{A}$ makes between any two elements $e_1,e_2$, one of $w(e_1) := w(e_1) + w(e_2)$ or $w(e_2) := w(e_2) + w(e_1)$ will occur.&lt;/dd>
+&lt;dd>
+&lt;p>Since either is possible before the comparison occurs, we can choose which is true upon $\mathcal{A}$&amp;rsquo;s query. Specifically, we will minimize the weight increment (if $w(e_1) &amp;gt; w(e_2)$ then assign $e_1&amp;gt;e_2$ else assign $e_1&amp;lt;e_2$).&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>Observe that with this dynamic response, any weight can at most double with each comparison. Since the algorithm only knows the maximum element once such an element obtains a weight of $n-1$ (there are $n-1$ elements less than the maximum one), $|M|\geq \log_2 n$.&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>$$n - 2 + \log_2 n$$&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>This is an &lt;em>&lt;strong>adversarial&lt;/strong>&lt;/em> argument since the proof constructs an adversary that dynamically responds to any algorithm&amp;rsquo;s queries such that it minimizes the algorithm&amp;rsquo;s effectiveness.&lt;/p>
+&lt;h2 id="graph-connectivity">Graph Connectivity&lt;/h2>
+&lt;h3 id="upper-bound-3">Upper Bound&lt;/h3>
+&lt;p>Query every pair to know the entire graph. In an $n$-node graph, this is $n\choose 2$ queries.&lt;/p>
+&lt;h3 id="lower-bound-adversarial-argument-1">Lower Bound (Adversarial Argument)&lt;/h3>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>Any deterministic graph connectivity algorithm must make $n\choose 2$ queries&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>We will again construct an adversary $\mathcal{E}$ to maximize the number of required queries an algorithm $\mathcal{A}$ must make.&lt;/dd>
+&lt;dd>
+&lt;p>Observe that the edges declared by $\mathcal{A}$ form a forest of trees (where $\mathcal{A}$ aims to determine if the number of trees in the forest is exactly $1$). $\mathcal{E}$ will maintain the following invariant.&lt;/p>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>For each tree $T$, all possible edges among its vertices have been queried&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>For each pair of trees $T_1, T_2$, $\exists (e_1,e_2)$ such that $e_1\in T_1, e_2\in T_2$.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>
+&lt;p>In other words, only dynamically create an edge if it is the last edge to connect two forests.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Intuitively $\mathcal{E}$&amp;rsquo;s idea is that if it creates an edge between two trees $T_1, T_2$, but it is not the last possible edge query between $T_1, T_2$, then $\mathcal{A}$ would not need to
+query any more edges between $T_1, T_2$.&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 400 137"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 32,64 L 64,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,80 L 128,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,64 L 160,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,64 L 48,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='104.000000,80.000000 92.000000,74.400002 92.000000,85.599998' fill='currentColor' transform='rotate(180.000000, 96.000000, 80.000000)'>&lt;/polygon>
+&lt;polygon points='136.000000,80.000000 124.000000,74.400002 124.000000,85.599998' fill='currentColor' transform='rotate(0.000000, 128.000000, 80.000000)'>&lt;/polygon>
+&lt;circle cx='32' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='48' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='64' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='64' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;circle cx='160' cy='96' r='6' stroke='currentColor' fill='#fff'>&lt;/circle>
+&lt;text text-anchor='middle' x='16' y='68' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='48' y='116' fill='currentColor' style='font-size:1em'>b&lt;/text>
+&lt;text text-anchor='middle' x='80' y='68' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='112' y='68' fill='currentColor' style='font-size:1em'>?&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='160' y='52' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='160' y='116' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>In the above example, there currently exists $0$ queries between trees $T_1$ and $T_2$. If $\mathcal{A}$ queries $(b, e)$ and $\mathcal{E}$ responds with &lt;em>&lt;strong>yes&lt;/strong>&lt;/em>, then $\mathcal{A}$ has no need to query any more edges between $T_1$ and $T_2$ because it already knows that there is going to be some path in $T_1$ to $b$ which connects to some path in $T_2$ to $e$.&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>AFSOC $\mathcal{A}$ outputs without querying $n\choose 2$ edges from $\mathcal{E}$. By definition of $\mathcal{E}$, $\exists T_1, T_2, &amp;hellip;, T_t$ such that there is no queried connecting edge between $T_i, T_j\thickspace \forall i, j$.&lt;/dd>
+&lt;dd>
+&lt;ul>
+&lt;li>If $\mathcal{A}$ outputs &lt;em>&lt;strong>yes&lt;/strong>&lt;/em>, then suppose all un-queried edges are not in the graph.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>If $\mathcal{A}$ outputs &lt;em>&lt;strong>no&lt;/strong>&lt;/em>, then suppose all un-queried edges are indeed in the graph.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote></description></item></channel></rss>

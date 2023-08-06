@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>las vegas on glee</title><link>https://kiblitz.github.io/tags/las-vegas/</link><description>Recent content in las vegas on glee</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 04 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kiblitz.github.io/tags/las-vegas/index.xml" rel="self" type="application/rss+xml"/><item><title>I. Derandomization: Kth Smallest Element</title><link>https://kiblitz.github.io/p/derandomization-kth-smallest-element/</link><pubDate>Sun, 04 Jun 2023 00:00:00 +0000</pubDate><guid>https://kiblitz.github.io/p/derandomization-kth-smallest-element/</guid><description>&lt;img src="https://kiblitz.github.io/p/derandomization-kth-smallest-element/waterfall_fire.jpg" alt="Featured image of post I. Derandomization: Kth Smallest Element" />&lt;h2 id="problem">Problem&lt;/h2>
+&lt;blockquote>
+&lt;p>Find the $k$th smallest element in an unsorted array $A$ of size $n$.&lt;/p>
+&lt;/blockquote>
+&lt;p>Sorting has $\mathcal{O}(n\log n)$ time complexity and is overkill for this specific problem (solves for all $k$).&lt;/p>
+&lt;hr>
+&lt;h3 id="quickselect">QuickSelect&lt;/h3>
+&lt;h4 id="algorithm">Algorithm&lt;/h4>
+&lt;blockquote>
+&lt;p>$\texttt{QuickSelect}(A, k)$&lt;/p>
+&lt;ul>
+&lt;li>Arbitrarily pick a pivot element $p$ from $A$&lt;/li>
+&lt;li>Split $A$ into $L = \lbrace a | \thickspace a \in A \text{ and } a &amp;lt; p \rbrace$ and $G = \lbrace a | \thickspace a \in A \text{ and } a &amp;gt; p \rbrace$&lt;/li>
+&lt;li>Recurse
+&lt;ul>
+&lt;li>If $|L| = k$ then return $p$&lt;/li>
+&lt;li>If $|L| &amp;gt; k - 1$ then $\texttt{QuickSelect}(L, k)$&lt;/li>
+&lt;li>If $|L| &amp;lt; k - 1$ then $\texttt{QuickSelect}(G, k - (|L| + 1))$&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;style type="text/css">
+.box-shortcode {
+padding: 1.6em;
+padding-top: 1.4em;
+line-height: 1.4em;
+margin-top: 1em;
+margin-bottom: 2em;
+border-radius: 4px;
+color: #444;
+background: #f3ebe850;
+}
+.box-title {
+margin: -18px -18px 12px;
+padding: 4px 18px;
+border-radius: 4px 4px 0 0;
+font-weight: 700;
+color: #fff;
+background: #6ab0de;
+}
+.box-shortcode.warning .box-title {
+background: #ff6b6b;
+}
+.box-shortcode.warning {
+background: #ff5b5bc6;
+}
+.box-shortcode.info .box-title {
+background: #0089e488;
+}
+.box-shortcode.info {
+background: #87ceffc0;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.box-shortcode.important .box-title {
+background: #f7ec2c;
+}
+.box-shortcode.important {
+background: #f7ec2c7d;
+}
+.box-shortcode.tip .box-title {
+background: #a3ffa36d;
+}
+.box-shortcode.tip {
+background: #a3ffa36d;
+box-shadow: 3px 3px 5px #0089e410;
+}
+.icon-box {
+display: inline-flex;
+align-self: center;
+margin-right: 8px;
+}
+.icon-box img,
+.icon-box svg {
+height: 1em;
+width: 1em;
+fill: currentColor;
+}
+.icon-box img,
+.icon-box.baseline svg {
+top: 0.125em;
+position: relative;
+}
+.box-shortcode p {
+margin-bottom: 0.6em;
+}
+.box-shortcode p:first-of-type {
+display: inline;
+}
+.box-shortcode p:nth-of-type(2) {
+margin-top: 0.6em;
+}
+.box-shortcode p:last-child {
+margin-bottom: 0;
+}
+&lt;/style>
+&lt;svg width="0" height="0" display="none" xmlns="http://www.w3.org/2000/svg">
+&lt;symbol id="tip-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+&lt;/symbol>
+&lt;symbol id="important-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="warning-box" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+&lt;/symbol>
+&lt;symbol id="info-box" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+&lt;path
+d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+&lt;/symbol>
+&lt;/svg>&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>The $A_k\in G$ case has to readjust the recursive $k$ value since we are essentially throwing away the first $|L| + 1$ elements ($L$ and $p$).&lt;/p>
+&lt;/div>
+&lt;hr>
+&lt;h4 id="example">Example&lt;/h4>
+&lt;p>&lt;em>Suppose we always pick the first element $A_0$ to be $p$ (this is arbitrary for arbitrary $A$).&lt;/em>&lt;/p>
+&lt;div class="box box-shortcode warning" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#warning-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$A$ can adversarially be monotonically ordered and the time complexity becomes $\mathcal{O}(n^2)$&lt;/p>
+&lt;/div>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 888 761"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 104,0 L 136,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,0 L 168,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,0 L 200,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 200,0 L 232,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 232,0 L 264,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,0 L 296,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 296,0 L 336,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,0 L 368,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,0 L 408,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,0 L 440,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,0 L 480,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,0 L 512,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,32 L 136,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,32 L 152,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,32 L 168,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,32 L 184,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,32 L 200,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 200,32 L 216,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,32 L 232,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 232,32 L 248,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,32 L 264,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,32 L 280,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,32 L 296,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 296,32 L 320,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,32 L 336,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,32 L 352,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,32 L 368,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,32 L 392,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,32 L 408,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,32 L 424,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,32 L 440,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,32 L 464,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,32 L 480,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,32 L 496,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 496,32 L 512,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,64 L 392,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,80 L 344,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 344,80 L 408,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,128 L 120,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,128 L 152,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,128 L 184,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,128 L 216,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,128 L 248,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,128 L 280,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,128 L 392,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,128 L 424,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,128 L 464,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,128 L 504,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,128 L 536,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,160 L 120,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,160 L 152,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,160 L 184,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,160 L 216,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,160 L 248,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,160 L 280,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,160 L 392,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,160 L 424,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,160 L 464,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,160 L 504,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,160 L 536,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,208 L 376,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,256 L 144,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,256 L 176,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,256 L 216,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,256 L 256,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,256 L 288,256' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,288 L 144,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,288 L 160,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,288 L 176,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,288 L 192,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,288 L 216,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,288 L 240,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,288 L 256,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,288 L 272,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,288 L 288,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,384 L 128,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,384 L 168,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,384 L 200,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,384 L 296,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,416 L 128,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,416 L 168,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,416 L 200,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,416 L 296,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,464 L 376,464' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,512 L 120,512' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,512 L 160,512' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,512 L 192,512' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,544 L 120,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,544 L 136,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,544 L 160,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,544 L 176,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,544 L 192,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,608 L 192,608' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,608 L 224,608' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,640 L 192,640' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,640 L 224,640' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,688 L 376,688' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 204,312 L 228,312' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 228,312 L 260,312' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 180,328 L 220,328' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 204,344 L 244,344' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,128 L 88,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 88,512 L 88,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,384 L 96,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,0 L 104,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,256 L 104,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,128 L 120,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,512 L 120,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,384 L 128,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,0 L 136,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,256 L 144,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,128 L 152,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,608 L 152,640' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,512 L 160,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,0 L 168,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,384 L 168,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,256 L 176,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,128 L 184,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,512 L 192,544' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,608 L 192,640' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 200,0 L 200,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 200,384 L 200,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,128 L 216,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,256 L 216,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,608 L 224,640' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 232,0 L 232,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,128 L 248,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,256 L 256,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,384 L 256,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,0 L 264,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,96 L 264,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,336 L 272,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,128 L 280,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,256 L 288,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 296,0 L 296,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 296,384 L 296,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,0 L 336,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,32 L 352,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,128 L 352,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,0 L 368,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,128 L 392,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,0 L 408,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,80 L 408,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,32 L 424,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,128 L 424,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,0 L 440,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,32 L 464,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,128 L 464,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,0 L 480,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 488,96 L 488,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 496,32 L 496,48' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,128 L 504,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 512,0 L 512,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 520,96 L 520,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 536,128 L 536,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,112 L 152,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 144,112 L 184,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,112 L 216,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,112 L 248,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,112 L 280,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,368 L 160,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,368 L 180,328' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,368 L 204,344' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 220,328 L 240,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 244,344 L 272,288' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,544 L 160,592' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,544 L 200,592' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,288 L 204,312' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 260,312 L 272,336' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,32 L 344,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 344,80 L 360,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,32 L 416,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,80 L 432,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 464,48 L 488,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 496,48 L 520,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 104,128 L 112,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='130.000000,112.000000 118.000000,106.400002 118.000000,117.599998' fill='currentColor' transform='rotate(120.000000, 112.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 112,384 L 120,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='138.000000,368.000000 126.000000,362.399994 126.000000,373.600006' fill='currentColor' transform='rotate(120.000000, 120.000000, 368.000000)'>&lt;/polygon>
+&lt;path d='M 136,128 L 144,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='162.000000,112.000000 150.000000,106.400002 150.000000,117.599998' fill='currentColor' transform='rotate(120.000000, 144.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 152,384 L 160,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='178.000000,368.000000 166.000000,362.399994 166.000000,373.600006' fill='currentColor' transform='rotate(120.000000, 160.000000, 368.000000)'>&lt;/polygon>
+&lt;path d='M 160,592 L 168,608' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='178.000000,592.000000 166.000000,586.400024 166.000000,597.599976' fill='currentColor' transform='rotate(60.000000, 160.000000, 592.000000)'>&lt;/polygon>
+&lt;path d='M 168,128 L 176,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='194.000000,112.000000 182.000000,106.400002 182.000000,117.599998' fill='currentColor' transform='rotate(120.000000, 176.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 184,384 L 192,368' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='210.000000,368.000000 198.000000,362.399994 198.000000,373.600006' fill='currentColor' transform='rotate(120.000000, 192.000000, 368.000000)'>&lt;/polygon>
+&lt;path d='M 200,592 L 208,608' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='218.000000,592.000000 206.000000,586.400024 206.000000,597.599976' fill='currentColor' transform='rotate(60.000000, 200.000000, 592.000000)'>&lt;/polygon>
+&lt;path d='M 200,128 L 208,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='226.000000,112.000000 214.000000,106.400002 214.000000,117.599998' fill='currentColor' transform='rotate(120.000000, 208.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 232,128 L 240,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='258.000000,112.000000 246.000000,106.400002 246.000000,117.599998' fill='currentColor' transform='rotate(120.000000, 240.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 264,112 L 264,120' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='280.000000,112.000000 268.000000,106.400002 268.000000,117.599998' fill='currentColor' transform='rotate(90.000000, 264.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 272,368 L 272,376' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='288.000000,368.000000 276.000000,362.399994 276.000000,373.600006' fill='currentColor' transform='rotate(90.000000, 272.000000, 368.000000)'>&lt;/polygon>
+&lt;path d='M 360,112 L 368,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='378.000000,112.000000 366.000000,106.400002 366.000000,117.599998' fill='currentColor' transform='rotate(60.000000, 360.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 408,112 L 408,120' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='424.000000,112.000000 412.000000,106.400002 412.000000,117.599998' fill='currentColor' transform='rotate(90.000000, 408.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 432,112 L 440,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='450.000000,112.000000 438.000000,106.400002 438.000000,117.599998' fill='currentColor' transform='rotate(60.000000, 432.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 488,112 L 488,120' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='504.000000,112.000000 492.000000,106.400002 492.000000,117.599998' fill='currentColor' transform='rotate(90.000000, 488.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 520,112 L 520,120' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='536.000000,112.000000 524.000000,106.400002 524.000000,117.599998' fill='currentColor' transform='rotate(90.000000, 520.000000, 112.000000)'>&lt;/polygon>
+&lt;path d='M 352,48 A 16,16 0 0,0 368,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 392,64 A 16,16 0 0,1 408,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,80 A 16,16 0 0,0 264,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 424,64 A 16,16 0 0,1 408,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='0' y='148' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='0' y='276' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='0' y='404' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='0' y='532' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='0' y='628' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='0' y='740' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='8' y='740' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='148' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='276' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='404' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='532' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='628' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='740' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='24' y='740' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='32' y='148' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='32' y='276' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='32' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='32' y='532' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='32' y='628' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='32' y='740' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='40' y='148' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='40' y='276' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='40' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='40' y='532' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='40' y='628' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='40' y='740' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='48' y='404' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='56' y='148' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='56' y='532' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='56' y='628' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='56' y='740' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='64' y='404' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='72' y='148' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='72' y='276' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='72' y='532' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='72' y='628' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='80' y='404' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='88' y='276' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='88' y='628' fill='currentColor' style='font-size:1em'>{&lt;/text>
+&lt;text text-anchor='middle' x='96' y='628' fill='currentColor' style='font-size:1em'>}&lt;/text>
+&lt;text text-anchor='middle' x='104' y='148' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='104' y='532' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='104' y='628' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='112' y='404' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='120' y='20' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='120' y='276' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='120' y='628' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='128' y='276' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='136' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='136' y='532' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='136' y='628' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='144' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='144' y='532' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='152' y='404' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='160' y='276' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='168' y='148' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='168' y='628' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='176' y='532' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='176' y='628' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='184' y='404' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='192' y='276' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='200' y='148' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='200' y='276' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='208' y='404' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='208' y='628' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='216' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='224' y='404' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='232' y='148' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='232' y='276' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='240' y='276' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='240' y='404' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='248' y='20' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='264' y='148' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='272' y='276' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='272' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='280' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='280' y='404' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='288' y='148' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='320' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='320' y='148' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='336' y='148' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='352' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='368' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='376' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='384' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='392' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='408' y='148' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='424' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='440' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='448' y='148' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='456' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='464' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='480' y='148' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='488' y='148' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='496' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='520' y='148' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;hr>
+&lt;h4 id="analysis">Analysis&lt;/h4>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>The expected number of comparisons is upper bounded by $4n$&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Let $C(A, n, k)$ be the cost (number of comparisons) to find the $k$th smallest element in an array $A$ of $n$ elements. Let $C(n) = \max_{A,k} C(A,n,k)$.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Convince yourself that $C(A,n,k)$ doesn&amp;rsquo;t depend on $A$&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;dd>It takes $n - 1$ comparisons to split $A$ into $L$ and $G$. The sizes of the pieces take the same distribution as $p$, which is uniformly random. By our definition of $C$, we will always consider the larger of the two pieces in cost calculation.&lt;/dd>
+&lt;dd>
+&lt;p>$$\mathbb{E}[C(n)] \leq (n-1) + \text{avg}[C(\frac{n}{2}),&amp;hellip;,C(n-1)]$$&lt;/p>
+&lt;/dd>
+&lt;dd>
+&lt;p>Inductively, assume $\mathbb{E}[C(i)] \leq 4i$ for $i &amp;lt; n$ ($0$ comparisons when $n=1$ so the base case holds).&lt;/p>
+&lt;/dd>
+&lt;dd>$$\begin{align*}\mathbb{E}[C(n)] &amp;amp;\leq (n-1) + \text{avg}[4(\frac{n}{2}),&amp;hellip;,4(n-1)] \newline &amp;amp;\leq (n-1) + 4(\frac{3n}{4}) \newline &amp;amp;\leq 4n\end{align*}$$
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Technically we assumed $n$ is even, but the proof is basically the same in the odd case&lt;/p>
+&lt;/div>
+&lt;/dd>
+&lt;/dl>
+&lt;/blockquote>
+&lt;p>Thus, QuickSelect has $\mathcal{O}(n)$ time complexity.&lt;/p>
+&lt;hr>
+&lt;h3 id="deterministicselect">DeterministicSelect&lt;/h3>
+&lt;h4 id="algorithm-1">Algorithm&lt;/h4>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Pick a parameter constant $\alpha$. It matters what $\alpha$ is, but for now suppose $\alpha=5$&lt;/p>
+&lt;/div>
+&lt;blockquote>
+&lt;p>$\texttt{ApproxMedian}(A, \alpha=5)$&lt;/p>
+&lt;ul>
+&lt;li>If $|A| = 1$ then return $A_0$&lt;/li>
+&lt;li>Partition $A$ into groups $G_1, G_2, &amp;hellip; G_{\frac{n}{\alpha}}$ each of size $\alpha$&lt;/li>
+&lt;li>Let $M = \lbrace \text{median}(G_i) \forall i \rbrace$
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>It doesn&amp;rsquo;t matter how median is calculated here since $\alpha$ is constant implies each calculation has $\mathcal{O}(1)$ time complexity ($\mathcal{O}(n)$ total)&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;li>return $\texttt{DeterministicSelect}(M, \lceil\frac{|M|}{2}\rceil)$
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>In other words, find the true median of the group medians&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;p>
+&lt;div class="box box-shortcode important" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#important-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>There are some integrality issues (that we will ignore) which complicate the analysis, though the time complexity should be unaffected&lt;/p>
+&lt;/div>
+$\texttt{DeterministicSelect}(A, k)$&lt;/p>
+&lt;ul>
+&lt;li>If $|A| \leq \alpha$ then return $k$th smallest value in $A$ by brute force&lt;/li>
+&lt;li>Let the pivot $p$ be $\texttt{ApproxMedian}(A)$&lt;/li>
+&lt;li>Split $A$ into $L = \lbrace a | \thickspace a \in A \text{ and } a &amp;lt; p \rbrace$ and $G = \lbrace a | \thickspace a \in A \text{ and } a &amp;gt; p \rbrace$&lt;/li>
+&lt;li>Recurse
+&lt;ul>
+&lt;li>If $|L| = k$ then return $p$&lt;/li>
+&lt;li>If $|L| &amp;gt; k - 1$ then $\texttt{DeterministicSelect}(L, k)$&lt;/li>
+&lt;li>If $|L| &amp;lt; k - 1$ then $\texttt{DeterministicSelect}(G, k - (|L| + 1))$&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Notice that the only difference between $\texttt{QuickSelect}$ and $\texttt{DeterministicSelect}$ is how the pivot $p$ is chosen&lt;/p>
+&lt;/div>
+&lt;hr>
+&lt;h4 id="approxmedian-example">ApproxMedian Example&lt;/h4>
+&lt;p>$\alpha=3$&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 888 473"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 32,0 L 64,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,0 L 96,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,0 L 128,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,0 L 160,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,0 L 192,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,0 L 224,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,0 L 256,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,0 L 288,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,0 L 320,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,0 L 360,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,0 L 400,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,0 L 440,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,0 L 480,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,0 L 520,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 520,0 L 560,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,32 L 64,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 L 128,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,32 L 160,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,32 L 192,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,32 L 224,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,32 L 256,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,32 L 288,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,32 L 320,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,32 L 360,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,32 L 400,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,32 L 440,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,32 L 480,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,32 L 520,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 520,32 L 560,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,64 L 32,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,64 L 64,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,64 L 96,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,64 L 152,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,64 L 184,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,64 L 216,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,64 L 272,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,64 L 304,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,64 L 336,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,64 L 400,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,64 L 440,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,64 L 480,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,64 L 544,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,64 L 584,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,64 L 624,64' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,96 L 32,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,96 L 48,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,96 L 64,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,96 L 96,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,96 L 136,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,96 L 152,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,96 L 184,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,96 L 216,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,96 L 256,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,96 L 272,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,96 L 304,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,96 L 336,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,96 L 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,96 L 416,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,96 L 440,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,96 L 480,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,96 L 544,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,96 L 560,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,96 L 584,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,96 L 624,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,128 L 120,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,128 L 256,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,128 L 400,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,144 L 152,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,144 L 240,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,192 L 64,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,192 L 96,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,192 L 128,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,192 L 168,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,192 L 208,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,208 L 544,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,224 L 64,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,224 L 96,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,224 L 128,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,224 L 168,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,224 L 208,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,320 L 184,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,320 L 216,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,320 L 248,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,320 L 288,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,320 L 328,320' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,352 L 184,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,352 L 216,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,352 L 248,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,352 L 288,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,352 L 328,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,64 L 0,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,0 L 32,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,64 L 32,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,192 L 32,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,96 L 48,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,0 L 64,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,64 L 64,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,192 L 64,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,144 L 80,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,0 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,64 L 96,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,192 L 96,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,160 L 112,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,64 L 120,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,0 L 128,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,192 L 128,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,96 L 136,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,64 L 152,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,144 L 152,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,320 L 152,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,0 L 160,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,192 L 168,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,64 L 184,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,320 L 184,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,0 L 192,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,192 L 208,224' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,64 L 216,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,320 L 216,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,0 L 224,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,64 L 240,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 248,320 L 248,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,0 L 256,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,96 L 256,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,64 L 272,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,0 L 288,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,320 L 288,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,64 L 304,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 320,0 L 320,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,320 L 328,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,64 L 336,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,0 L 360,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,64 L 360,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,0 L 400,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,64 L 400,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,96 L 416,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,0 L 440,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,64 L 440,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,0 L 480,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,64 L 480,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,64 L 504,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 520,0 L 520,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,64 L 544,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,0 L 560,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,96 L 560,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,64 L 584,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 624,64 L 624,96' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,176 L 48,184' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='64.000000,176.000000 52.000000,170.399994 52.000000,181.600006' fill='currentColor' transform='rotate(90.000000, 48.000000, 176.000000)'>&lt;/polygon>
+&lt;path d='M 80,176 L 80,184' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='96.000000,176.000000 84.000000,170.399994 84.000000,181.600006' fill='currentColor' transform='rotate(90.000000, 80.000000, 176.000000)'>&lt;/polygon>
+&lt;path d='M 112,176 L 112,184' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='128.000000,176.000000 116.000000,170.399994 116.000000,181.600006' fill='currentColor' transform='rotate(90.000000, 112.000000, 176.000000)'>&lt;/polygon>
+&lt;path d='M 152,176 L 152,184' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='168.000000,176.000000 156.000000,170.399994 156.000000,181.600006' fill='currentColor' transform='rotate(90.000000, 152.000000, 176.000000)'>&lt;/polygon>
+&lt;polygon points='224.000000,208.000000 212.000000,202.399994 212.000000,213.600006' fill='currentColor' transform='rotate(180.000000, 216.000000, 208.000000)'>&lt;/polygon>
+&lt;path d='M 96,128 A 16,16 0 0,0 80,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 136,112 A 16,16 0 0,1 120,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,128 A 16,16 0 0,0 152,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,112 A 16,16 0 0,1 400,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,144 A 16,16 0 0,0 112,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,128 A 16,16 0 0,1 240,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,192 A 16,16 0 0,1 544,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='0' y='212' fill='currentColor' style='font-size:1em'>M&lt;/text>
+&lt;text text-anchor='middle' x='0' y='452' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='8' y='452' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='84' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='16' y='212' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='16' y='452' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='24' y='452' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='32' y='452' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='40' y='452' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='48' y='84' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='48' y='212' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='56' y='452' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='64' y='276' fill='currentColor' style='font-size:1em'>D&lt;/text>
+&lt;text text-anchor='middle' x='64' y='340' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='64' y='404' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='72' y='276' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='72' y='404' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='80' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='212' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='80' y='276' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='80' y='340' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='80' y='404' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='88' y='276' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='88' y='404' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='96' y='276' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='96' y='340' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='96' y='404' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='104' y='276' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='104' y='340' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='104' y='404' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='112' y='212' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='112' y='276' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='120' y='276' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='120' y='340' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='120' y='404' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='128' y='276' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='136' y='84' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='136' y='276' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='136' y='340' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='144' y='212' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='144' y='276' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='152' y='212' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='152' y='276' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='160' y='276' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='168' y='84' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='168' y='276' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='168' y='340' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='176' y='276' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='184' y='212' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='184' y='276' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='192' y='212' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='192' y='276' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='200' y='84' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='200' y='276' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='200' y='340' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='208' y='276' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='232' y='340' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='240' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='256' y='84' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='264' y='340' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='272' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='272' y='340' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='288' y='84' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='304' y='340' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='312' y='340' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='320' y='84' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='336' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='376' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='376' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='384' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='384' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='416' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='416' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='424' y='20' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='424' y='84' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='456' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='456' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='464' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='464' y='84' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='496' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='504' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='520' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='528' y='84' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='536' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='544' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='560' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='568' y='84' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='600' y='84' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='608' y='84' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;hr>
+&lt;h4 id="analysis-1">Analysis&lt;/h4>
+&lt;blockquote>
+&lt;dl>
+&lt;dt>&lt;strong>ApproxMedian Bound Lemma&lt;/strong>&lt;/dt>
+&lt;dd>Let $p = \texttt{ApproxMedian}(A)$. Let $n = \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil$. At least $n$ elements in $A$ are greater than $p$ and at least $n$ elements in $A$ are less than $p$.&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>WLOG look at the $\leq$ case. By definition, $p$ is the true median of the group medians, so $\lceil\frac{n}{2\alpha}\rceil$ groups (including the group $p$ is in) have medians $\leq p$.&lt;/dd>
+&lt;dd>
+&lt;p>For each of those groups, there are $\lceil\frac{\alpha}{2}\rceil$ elements (including that group&amp;rsquo;s median) $\leq$ that group&amp;rsquo;s median and therefore $p$.&lt;/p>
+&lt;/dd>
+&lt;/dl>
+&lt;p>&lt;strong>Visual&lt;/strong>&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 872 505"
+>
+&lt;g transform='translate(8,16)'>
+&lt;path d='M 0,0 L 32,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,0 L 64,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,0 L 96,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,0 L 128,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,0 L 160,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,0 L 192,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,0 L 224,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,0 L 256,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,0 L 288,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,0 L 328,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,0 L 368,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,0 L 408,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,0 L 448,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,0 L 488,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 488,0 L 528,0' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,32 L 32,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,32 L 64,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,32 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,32 L 128,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,32 L 160,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,32 L 192,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,32 L 224,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,32 L 256,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,32 L 288,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,32 L 328,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,32 L 368,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,32 L 408,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,32 L 448,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,32 L 488,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 488,32 L 528,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,80 L 32,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 L 64,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,80 L 96,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,80 L 152,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,80 L 184,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,80 L 216,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,80 L 272,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,80 L 304,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,80 L 336,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,80 L 400,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,80 L 440,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,80 L 480,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,80 L 544,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,80 L 584,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,80 L 624,80' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,112 L 32,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,112 L 48,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,112 L 64,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,112 L 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,112 L 152,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,112 L 168,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,112 L 184,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,112 L 216,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,112 L 272,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,112 L 288,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,112 L 304,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,112 L 336,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,112 L 400,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,112 L 416,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,112 L 440,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,112 L 480,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,112 L 544,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,112 L 560,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,112 L 584,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,112 L 624,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,144 L 80,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,144 L 288,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,144 L 416,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,144 L 544,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 L 96,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,160 L 152,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,160 L 264,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,160 L 272,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,160 L 400,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,208 L 32,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,208 L 112,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,208 L 192,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,208 L 280,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,208 L 368,208' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,240 L 32,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,240 L 112,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,240 L 192,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,240 L 280,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,240 L 368,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,272 L 32,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,272 L 112,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,272 L 192,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,272 L 280,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,272 L 368,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,304 L 32,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,304 L 112,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,304 L 192,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,304 L 280,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,304 L 368,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,352 L 32,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,352 L 64,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,352 L 96,352' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,384 L 32,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,384 L 64,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,384 L 96,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,384 L 168,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,384 L 208,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,416 L 32,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,416 L 64,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,416 L 96,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,416 L 168,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,416 L 208,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,448 L 64,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,448 L 96,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,448 L 128,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,448 L 168,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,448 L 208,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,480 L 64,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,480 L 96,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,480 L 128,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,480 L 168,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,480 L 208,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,0 L 0,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,80 L 0,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,208 L 0,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,240 L 0,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,272 L 0,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,352 L 0,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 0,384 L 0,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,176 L 16,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,0 L 32,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,80 L 32,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,208 L 32,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,240 L 32,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,272 L 32,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,352 L 32,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,384 L 32,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,448 L 32,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 48,112 L 48,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,0 L 64,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,80 L 64,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,352 L 64,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,384 L 64,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 64,448 L 64,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,208 L 80,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,240 L 80,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,272 L 80,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,0 L 96,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,80 L 96,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,160 L 96,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,352 L 96,384' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,384 L 96,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 96,448 L 96,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,208 L 112,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,240 L 112,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 112,272 L 112,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 120,80 L 120,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,0 L 128,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,384 L 128,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,416 L 128,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 128,448 L 128,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 152,80 L 152,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,0 L 160,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,208 L 160,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,240 L 160,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 160,272 L 160,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,112 L 168,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,384 L 168,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,416 L 168,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,448 L 168,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 176,176 L 176,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 184,80 L 184,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,0 L 192,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,208 L 192,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,240 L 192,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,272 L 192,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,384 L 208,416' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,416 L 208,448' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 208,448 L 208,480' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 216,80 L 216,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 224,0 L 224,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,80 L 240,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,208 L 240,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,240 L 240,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 240,272 L 240,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 256,0 L 256,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 264,160 L 264,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 272,80 L 272,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,208 L 280,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,240 L 280,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,272 L 280,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,0 L 288,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,112 L 288,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 304,80 L 304,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,0 L 328,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,208 L 328,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,240 L 328,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 328,272 L 328,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 336,80 L 336,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 352,176 L 352,192' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 360,80 L 360,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,0 L 368,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,208 L 368,240' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,240 L 368,272' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,272 L 368,304' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 400,80 L 400,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 408,0 L 408,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,112 L 416,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 440,80 L 440,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 448,0 L 448,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 480,80 L 480,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 488,0 L 488,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 504,80 L 504,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 528,0 L 528,32' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 544,80 L 544,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,112 L 560,128' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 584,80 L 584,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 624,80 L 624,112' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 16,192 L 16,200' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='32.000000,192.000000 20.000000,186.399994 20.000000,197.600006' fill='currentColor' transform='rotate(90.000000, 16.000000, 192.000000)'>&lt;/polygon>
+&lt;path d='M 96,192 L 96,200' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='112.000000,192.000000 100.000000,186.399994 100.000000,197.600006' fill='currentColor' transform='rotate(90.000000, 96.000000, 192.000000)'>&lt;/polygon>
+&lt;path d='M 176,192 L 176,200' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='192.000000,192.000000 180.000000,186.399994 180.000000,197.600006' fill='currentColor' transform='rotate(90.000000, 176.000000, 192.000000)'>&lt;/polygon>
+&lt;path d='M 264,192 L 264,200' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='280.000000,192.000000 268.000000,186.399994 268.000000,197.600006' fill='currentColor' transform='rotate(90.000000, 264.000000, 192.000000)'>&lt;/polygon>
+&lt;path d='M 352,192 L 352,200' fill='none' stroke='currentColor'>&lt;/path>
+&lt;polygon points='368.000000,192.000000 356.000000,186.399994 356.000000,197.600006' fill='currentColor' transform='rotate(90.000000, 352.000000, 192.000000)'>&lt;/polygon>
+&lt;path d='M 48,128 A 16,16 0 0,0 64,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 80,144 A 16,16 0 0,1 96,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 280,144 A 16,16 0 0,0 264,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 560,128 A 16,16 0 0,1 544,144' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 32,160 A 16,16 0 0,0 16,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 168,144 A 16,16 0 0,1 152,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 192,160 A 16,16 0 0,0 176,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 288,144 A 16,16 0 0,1 272,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 368,160 A 16,16 0 0,0 352,176' fill='none' stroke='currentColor'>&lt;/path>
+&lt;path d='M 416,144 A 16,16 0 0,1 400,160' fill='none' stroke='currentColor'>&lt;/path>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='16' y='100' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='16' y='228' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='16' y='260' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='16' y='292' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='16' y='372' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='16' y='404' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='48' y='100' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='48' y='372' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='48' y='404' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='48' y='468' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='372' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='80' y='404' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='80' y='468' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='96' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='96' y='260' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='96' y='292' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='112' y='468' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='136' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='144' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='144' y='436' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='144' y='468' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='152' y='404' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='152' y='436' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='152' y='468' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='168' y='100' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='176' y='228' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='176' y='260' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='176' y='292' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='184' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='184' y='436' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='184' y='468' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='192' y='404' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='192' y='436' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='192' y='468' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='200' y='100' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='240' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='256' y='100' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='256' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='256' y='260' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='256' y='292' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='264' y='228' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='264' y='260' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='264' y='292' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='272' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='288' y='100' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='320' y='100' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='344' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='260' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='344' y='292' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='352' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='352' y='228' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='352' y='260' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='352' y='292' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='376' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='384' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='384' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='392' y='20' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='416' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='424' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='424' y='100' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='432' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='456' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='464' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='464' y='100' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='472' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='504' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='512' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='520' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='528' y='100' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='560' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='568' y='100' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='600' y='100' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='608' y='100' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;div class="box box-shortcode tip" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#tip-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$$\texttt{ApproxMedian}(A)=8$$ $$\begin{align}8 &amp;amp;\geq 5\geq 4 \tag*{medians} \newline 8&amp;amp;\geq 2 \tag*{group 3} \newline 5&amp;amp;\geq 1 \tag*{group 2} \newline 4&amp;amp;\geq 3 \tag*{group 1} \newline 8&amp;amp;\geq i \thickspace \forall i\in\lbrace 3, 4, 1, 5, 2, 8 \rbrace \tag*{$\therefore$} \end{align}$$&lt;/p>
+&lt;/div>
+&lt;hr>
+&lt;dl>
+&lt;dt>&lt;strong>Theorem&lt;/strong>&lt;/dt>
+&lt;dd>If $\alpha$ is chosen intelligently, $\texttt{DeterministicSelect}$ makes $\mathcal{O}(n)$ comparisons&lt;/dd>
+&lt;dt>&lt;strong>Proof&lt;/strong>&lt;/dt>
+&lt;dd>Let $C(A, n, k)$ be the worst-case cost to find the $k$th smallest element in an array $A$ of $n$ elements and let $C(n) = \max_{A,k} C(A,n,k)$.&lt;/dd>
+&lt;dd>
+&lt;ul>
+&lt;li>Finding the median of a single group has constant cost (since its size is bounded by $\alpha$). Since there are a linear number of groups, this step has linear time complexity.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>
+&lt;ul>
+&lt;li>As in $\texttt{QuickSelect}$ it also take linear time to split $A$ into $L$ and $G$.&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>
+&lt;ul>
+&lt;li>The first recursive call to find the true median of medians has time complexity $C(\frac{n}{\alpha})$.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Since there are that many number of medians&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>&lt;ul>
+&lt;li>The second recursive call to search from a sub-piece has time complexity $C(n - \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil)$ by the &lt;strong>ApproxMedian Bound Lemma&lt;/strong>.
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>Since in worst case we recurse on the larger sub-piece&lt;/p>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/dd>
+&lt;dd>
+&lt;p>$$C(n) \leq \gamma n + C(\frac{n}{\alpha}) + C(n - \lceil\frac{n}{2\alpha}\rceil\lceil\frac{\alpha}{2}\rceil)$$
+&lt;div class="box box-shortcode info" >
+&lt;span class="icon-box baseline">
+&lt;svg>&lt;use href="#info-box">&lt;/use>&lt;/svg>
+&lt;/span>
+&lt;p>$\gamma$ is a constant where its subexpression represents linear time complexity from the first two bullet points&lt;/p>
+&lt;/div>
+&lt;/p>
+&lt;/dd>
+&lt;dd>Using $\alpha=5$&lt;/dd>
+&lt;dd>$$\begin{align*}C(n)&amp;amp;\leq \gamma n + C(\frac{n}{5}) + C(n - 3\lceil\frac{n}{10}\rceil)\newline&amp;amp;\leq \gamma n + C(\frac{n}{5}) + C(\frac{7n}{10})\newline&amp;amp;\leq \gamma n[1 + (\frac{1}{5} + \frac{7}{10}) + (\frac{1}{5}(\frac{1}{5} + \frac{7}{10}) + \frac{7}{10}(\frac{1}{5} + \frac{7}{10})) + &amp;hellip; ] \newline &amp;amp;\leq \gamma n[1 + (\frac{9}{10}) + (\frac{1}{5}\cdot\frac{9}{10} + \frac{7}{10}\cdot\frac{9}{10}) + &amp;hellip;] \newline &amp;amp;\leq \gamma n[1 + (\frac{9}{10}) + (\frac{9}{10})^2 + (\frac{9}{10})^3 + &amp;hellip;] \newline &amp;amp;\leq 10\gamma n \newline &amp;amp;\in \mathcal{O}(n)\end{align*}$$&lt;/dd>
+&lt;dt>&lt;strong>Corollary&lt;/strong>&lt;/dt>
+&lt;dd>$\texttt{DeterministicSelect}$ has linear time complexity if $$\begin{align*}\frac{1}{\alpha} + 1 - \frac{1}{2\alpha}\lceil\frac{\alpha}{2}\rceil &amp;amp;&amp;lt; 1\newline\frac{1}{\alpha} - \frac{1}{2\alpha}\lceil\frac{\alpha}{2}\rceil &amp;amp;&amp;lt; 0\end{align*}$$&lt;/dd>
+&lt;/dl>
+&lt;/blockquote></description></item></channel></rss>
